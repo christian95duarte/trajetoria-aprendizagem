@@ -1,0 +1,9 @@
+# Nada de planilhas, tabulações ou PDFs de origem neste repositório:
+# ele contém apenas a página publicada.
+*.xlsx
+*.xlsm
+*.csv
+*.docx
+*.pdf
+.DS_Store
+Thumbs.db
