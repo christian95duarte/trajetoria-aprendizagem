@@ -114,6 +114,7 @@ body{margin:0;background:var(--plane);color:var(--ink);font-family:var(--font-an
 .sp-est{font-style:italic}
 .sp-est::after{content:"*"}
 .sp-etapas{margin-bottom:0}
+.sp-resumo .sp-wrap+.sp-wrap{margin-top:var(--cds-gap-sm)}
 #etapa-ef,#etapa-em{display:flex;flex-direction:column;gap:var(--cds-gap-lg)}
 #etapa-ef[hidden],#etapa-em[hidden]{display:none}
 .sp-etapas button{font-size:var(--cds-font-size-heading)}
@@ -143,11 +144,24 @@ body{margin:0;background:var(--plane);color:var(--ink);font-family:var(--font-an
 
 
   <section class="sp-card sp-resumo" id="resumo">
-    <h2>Nota Final por etapa · projeção pela Prova Paulista</h2>
-    <p class="sp-note">Como a primeira tabela do boletim. As duas etapas usam a Prova Paulista, a única medida comum a elas.</p>
+    <h2 id="tit-bol-geral">Boletim projetado 2026 · pela Prova Paulista</h2>
+    <p class="sp-note">Mesmo formato do boletim SARESP: Nota Final por etapa, Anos Finais do EF e Ensino Médio. As duas etapas usam a Prova Paulista, a única medida comum a elas; a projeção pelo Simulado dos Anos Finais está na aba abaixo. Participação pela Prova Paulista (pesos 20%, 30% e 50%). Nota com * repete a nota 2025 da mesma coorte, porque a Prova Paulista não aplica o componente na série.</p>
+    <div class="sp-legend"><span><b class="sp-bad">vermelho</b> baixo (até 4,0)</span><span><b class="sp-warn">amarelo</b> médio (acima de 4,0 até 6,0)</span><span><b class="sp-ok">verde</b> alto (acima de 6,0)</span></div>
     <div class="sp-wrap">
       <table class="sp-tab" id="tab-resumo" data-source="resumo" data-row-key="chave">
-        <thead><tr><th data-field="rotulo">Ano/Etapa Escolar</th><th class="sp-ng" data-field="proj">Projeção 2026</th><th data-field="lo">Conservador</th><th data-field="hi">Otimista</th><th data-field="of">Nota Final 2025</th></tr></thead>
+        <thead><tr><th data-field="rotulo">Ano/Etapa Escolar</th><th class="sp-ng" data-field="proj">Nota Final 2026</th><th data-field="lo">Conservador</th><th data-field="hi">Otimista</th><th data-field="of">Nota Final 2025</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="sp-wrap">
+      <table class="sp-tab" id="tab-bol-ef" data-source="projecao" data-row-key="chave">
+        <thead><tr><th data-field="rotulo">Anos Finais do EF</th><th class="sp-ng" data-field="NG">Nota Global</th><th data-field="PART">Participação</th><th data-field="LP">LP</th><th data-field="MAT">MAT</th><th data-field="ING">LI</th><th data-field="GEO">GEO</th><th data-field="HIS">HIS</th><th data-field="CIE">CIE</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="sp-wrap">
+      <table class="sp-tab" id="tab-bol-em" data-source="em_projecao" data-row-key="chave">
+        <thead><tr><th data-field="rotulo">Ensino Médio</th><th class="sp-ng" data-field="NG">Nota Global</th><th data-field="PART">Participação</th><th data-field="LP">LP</th><th data-field="MAT">MAT</th><th data-field="ING">LI</th><th data-field="GEO">GEO</th><th data-field="HIS">HIS</th><th data-field="BIO">BIO</th><th data-field="FIS">FIS</th><th data-field="QUI">QUI</th><th data-field="FIL">FIL</th><th data-field="SOC">SOC</th></tr></thead>
         <tbody></tbody>
       </table>
     </div>
@@ -926,6 +940,22 @@ dash.calc('resumo', {
         const tr = document.createElement('tr'); tr.dataset.key = r.chave;
         td(tr, r.rotulo); td(tr, fmt(r.proj), 'sp-ng sp-strong ' + faixa(r.proj)); td(tr, fmt(r.lo), faixa(r.lo)); td(tr, fmt(r.hi), faixa(r.hi)); td(tr, fmt(r.of), faixa(r.of));
         tR.append(tr);
+      });
+    }
+    $('tit-bol-geral').textContent = 'Boletim projetado 2026 · pela Prova Paulista · cenário ' + CEN[p.cenario];
+    const pe = dash.data('projecao'), pm = dash.data('em_projecao');
+    if (ok(pe)) {
+      const t = document.querySelector('#tab-bol-ef tbody'); t.replaceChildren();
+      ['6', '7', '8', '9'].forEach((a, i) => {
+        linha(t, pe.data.find(r => r.base === 'pp' && r.cenario === p.cenario && r.nivel === 'ano' && r.escopo === a), 'sp-proj' + (i && p.comparar ? ' sp-sep' : ''), COLS_EF);
+        if (p.comparar) linha(t, pe.data.find(r => r.base === 'oficial' && r.ano === a), 'sp-of', COLS_EF);
+      });
+    }
+    if (ok(pm)) {
+      const t = document.querySelector('#tab-bol-em tbody'); t.replaceChildren();
+      ['1', '2', '3'].forEach((s, i) => {
+        linha(t, pm.data.find(r => r.cenario === p.cenario && r.nivel === 'serie' && r.escopo === s), 'sp-proj' + (i && p.comparar ? ' sp-sep' : ''), COLS_EM);
+        if (p.comparar) linha(t, pm.data.find(r => r.cenario === 'oficial' && r.serie === s), 'sp-of', COLS_EM);
       });
     }
     if (p.etapa === 'em') desenhaEM(p); else desenhaEF(p);
