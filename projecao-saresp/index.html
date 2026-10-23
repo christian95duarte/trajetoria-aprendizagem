@@ -12,15 +12,15 @@
 <style>
 :root{color-scheme:light dark;
   --plane:#f4f3ef;--raised:#ffffff;--sunken:#edece7;--ink:#0b0b0b;--ink-2:#52514e;--ink-3:#6e6c66;
-  --grid:#e1e0d9;--axis:#c3c2b7;--hair:rgba(11,11,11,.11);--lp:#2a78d6;
+  --grid:#e1e0d9;--axis:#c3c2b7;--hair:rgba(11,11,11,.11);--lp:#2a78d6;--mat:#eb6834;--amb:#6f55c2;
   --good-ink:#006300;--crit-ink:#c0392b;--warn-ink:#a86a00;--shadow-2:0 2px 10px rgba(11,11,11,.07)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --plane:#0d0d0d;--raised:#1a1a19;--sunken:#232322;--ink:#ffffff;--ink-2:#c3c2b7;--ink-3:#a8a69c;
-  --grid:#2c2c2a;--axis:#403f3c;--hair:rgba(255,255,255,.13);--lp:#3987e5;
+  --grid:#2c2c2a;--axis:#403f3c;--hair:rgba(255,255,255,.13);--lp:#3987e5;--mat:#e4793f;--amb:#a08ae6;
   --good-ink:#2fbb2f;--crit-ink:#f08585;--warn-ink:#e3b14a;--shadow-2:0 2px 12px rgba(0,0,0,.5)}}
 :root[data-theme="dark"]{
   --plane:#0d0d0d;--raised:#1a1a19;--sunken:#232322;--ink:#ffffff;--ink-2:#c3c2b7;--ink-3:#a8a69c;
-  --grid:#2c2c2a;--axis:#403f3c;--hair:rgba(255,255,255,.13);--lp:#3987e5;
+  --grid:#2c2c2a;--axis:#403f3c;--hair:rgba(255,255,255,.13);--lp:#3987e5;--mat:#e4793f;--amb:#a08ae6;
   --good-ink:#2fbb2f;--crit-ink:#f08585;--warn-ink:#e3b14a;--shadow-2:0 2px 12px rgba(0,0,0,.5)}
 :root{
   --font-anthropic-sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
@@ -102,6 +102,14 @@ body{margin:0;background:var(--plane);color:var(--ink);font-family:var(--font-an
 .sp-fail{display:flex;align-items:center;justify-content:center;gap:.4rem;font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);min-height:6rem}
 .sp-fail i{width:.375rem;height:.375rem;border-radius:50%;background:var(--color-bad);display:inline-block}
 @media (prefers-reduced-motion:no-preference){.sp-in{animation:spIn var(--cds-dur-slow) var(--cds-ease-out) both}@keyframes spIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}}
+.sp-sw{display:inline-block;width:.6rem;height:.6rem;border-radius:50%;margin-right:.35rem;vertical-align:baseline}
+.sp-sw-pp{background:var(--sp-c-pp)}
+.sp-sw-sim{background:var(--sp-c-sim)}
+.sp-sw-amb{background:var(--sp-c-amb)}
+.sp-sw-of{border:2px solid var(--cds-chart-muted);width:.55rem;height:.55rem}
+.sp-tabs{display:flex;flex-wrap:wrap;gap:0;border-bottom:1px solid var(--color-border-line);margin-bottom:calc(-1 * var(--cds-gap-sm))}
+.sp-tabs button{font:inherit;font-size:var(--cds-font-size-body);font-weight:var(--cds-font-weight-medium);background:none;border:0;border-bottom:2.5px solid transparent;color:var(--color-fg-muted);padding:var(--cds-pad-sm) var(--cds-pad-md);cursor:pointer}
+.sp-tabs button[aria-selected=true]{color:var(--color-fg);border-bottom-color:var(--color-fg)}
 </style>
 </head>
 <body>
@@ -112,7 +120,7 @@ body{margin:0;background:var(--plane);color:var(--ink);font-family:var(--font-an
   <header class="sp-head" id="topo">
     <span class="sp-eyebrow">041609 · Santo Dias da Silva · Escola de período integral com alta complexidade e média vulnerabilidade</span>
     <h1 class="sp-title">Projeção SARESP 2026 · Anos Finais do EF</h1>
-    <p class="sp-take dash-skeleton" id="takeaway" data-source="nota_final projecao"></p>
+    <p class="sp-take dash-skeleton" id="takeaway" data-source="comparacao"></p>
   </header>
 
   <div class="sp-controls" id="controles">
@@ -122,34 +130,57 @@ body{margin:0;background:var(--plane);color:var(--ink);font-family:var(--font-an
         <button type="button" data-v="provavel">Provável</button>
         <button type="button" data-v="otimista">Otimista</button>
       </div></div>
-    <div class="sp-ctl"><span class="sp-ctl-label">Base da projeção</span>
-      <div class="sp-seg" id="seg-base" role="group" aria-label="Base da projeção">
-        <button type="button" data-v="pp">Prova Paulista</button>
-        <button type="button" data-v="todas">As cinco medidas</button>
-      </div></div>
     <div class="sp-ctl"><span class="sp-ctl-label">&nbsp;</span>
       <label class="sp-check"><input type="checkbox" id="chk-2025"> Mostrar o boletim 2025 abaixo de cada ano</label></div>
   </div>
 
   <section class="sp-card" id="nota-final">
-    <h2>Nota Final dos Anos Finais</h2>
-    <p class="sp-note">Média das Notas Globais do 6º ao 9º ano, como no boletim. O intervalo vai do cenário conservador ao otimista.</p>
+    <h2>Nota Final dos Anos Finais · projeções</h2>
+    <p class="sp-note">Média das Notas Globais do 6º ao 9º ano, como no boletim. Cada projeção usa uma base e a sua própria calibração; a faixa vai do cenário conservador ao otimista.</p>
     <div class="sp-kpis">
-      <div class="sp-kpi"><span class="sp-kpi-lab" id="lab-nf">Projeção 2026</span>
-        <span class="sp-kpi-val dash-skeleton" id="kpi-nf" data-source="nota_final" data-field="NF"></span>
-        <span class="sp-kpi-sub" id="kpi-nf-sub"></span></div>
-      <div class="sp-kpi"><span class="sp-kpi-lab">Boletim 2025</span>
+      <div class="sp-kpi"><span class="sp-kpi-lab"><span class="sp-sw sp-sw-pp"></span>Pela Prova Paulista</span>
+        <span class="sp-kpi-val dash-skeleton" id="kpi-pp" data-source="nota_final" data-field="NF"></span>
+        <span class="sp-kpi-sub" id="kpi-pp-sub"></span></div>
+      <div class="sp-kpi"><span class="sp-kpi-lab"><span class="sp-sw sp-sw-sim"></span>Pelo Simulado SARESP</span>
+        <span class="sp-kpi-val dash-skeleton" id="kpi-sim" data-source="nota_final" data-field="NF"></span>
+        <span class="sp-kpi-sub" id="kpi-sim-sub"></span></div>
+      <div class="sp-kpi"><span class="sp-kpi-lab"><span class="sp-sw sp-sw-amb"></span>Ambas</span>
+        <span class="sp-kpi-val dash-skeleton" id="kpi-ambas" data-source="nota_final" data-field="NF"></span>
+        <span class="sp-kpi-sub" id="kpi-ambas-sub"></span></div>
+      <div class="sp-kpi"><span class="sp-kpi-lab"><span class="sp-sw sp-sw-of"></span>Boletim 2025</span>
         <span class="sp-kpi-val dash-skeleton" id="kpi-nf25" data-source="saresp_2025" data-field="valor" data-where="ano=AF&amp;comp=NF"></span>
         <span class="sp-kpi-sub">Nota Final oficial · SARESP 2025</span></div>
-      <div class="sp-kpi"><span class="sp-kpi-lab">Variação projetada</span>
-        <span class="sp-kpi-val dash-skeleton" id="kpi-delta" data-source="nota_final" data-field="delta"></span>
-        <span class="sp-kpi-sub">pontos na escala de 0 a 10</span></div>
     </div>
   </section>
 
+  <div class="sp-grid">
+    <section class="sp-card" id="comparacao-ng">
+      <h2>Nota Global por ano em cada projeção</h2>
+      <p class="sp-note">Diferença = Simulado − Prova Paulista. Quando as duas bases concordam, a projeção é mais firme.</p>
+      <div class="sp-wrap">
+        <table class="sp-tab" id="tab-comp" data-source="comparacao" data-row-key="chave">
+          <thead><tr><th data-field="rotulo">Ano</th><th data-field="pp">Prova Paulista</th><th data-field="sim">Simulado SARESP</th><th data-field="ambas">Ambas</th><th data-field="dif">Diferença</th><th data-field="of">2025</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+    <section class="sp-card" id="grafico-ng">
+      <h2>Nota Global: 2025 e as projeções</h2>
+      <p class="sp-note"><span class="sp-sw sp-sw-of"></span>boletim 2025 · <span class="sp-sw sp-sw-pp"></span>Prova Paulista · <span class="sp-sw sp-sw-sim"></span>Simulado SARESP · <span class="sp-sw sp-sw-amb"></span>ambas. A barra clara cobre do conservador ao otimista.</p>
+      <div class="sp-chart" id="chart-ng" data-source="projecao"></div>
+    </section>
+  </div>
+
+  <nav class="sp-tabs" id="abas" role="tablist" aria-label="Projeção detalhada">
+    <button type="button" role="tab" data-v="pp"><span class="sp-sw sp-sw-pp"></span>Projeção pela Prova Paulista</button>
+    <button type="button" role="tab" data-v="sim"><span class="sp-sw sp-sw-sim"></span>Projeção pelo Simulado SARESP</button>
+    <button type="button" role="tab" data-v="ambas"><span class="sp-sw sp-sw-amb"></span>Ambas</button>
+  </nav>
+  <p class="sp-note" id="aba-nota"></p>
+
   <section class="sp-card" id="boletim">
-    <h2>Anos Finais do EF · boletim projetado</h2>
-    <p class="sp-note">Mesmas colunas do boletim oficial. Notas de 0 a 10; participação estimada pela participação na Prova Paulista (1º, 2º e 3º bimestres, com pesos 20%, 30% e 50%). O ícone ⚠ marca participação abaixo de 80%, como no boletim.</p>
+    <h2 id="tit-boletim">Anos Finais do EF · boletim projetado</h2>
+    <p class="sp-note" id="nota-boletim">Mesmas colunas do boletim oficial. Notas de 0 a 10. O ícone ⚠ marca participação abaixo de 80%, como no boletim.</p>
     <div class="sp-legend"><span><b class="sp-bad">vermelho</b> baixo (até 4,0)</span><span><b class="sp-warn">amarelo</b> médio (acima de 4,0 até 6,0)</span><span><b class="sp-ok">verde</b> alto (acima de 6,0)</span></div>
     <div class="sp-wrap">
       <table class="sp-tab" id="tab-anos" data-source="projecao" data-row-key="chave">
@@ -160,14 +191,19 @@ body{margin:0;background:var(--plane);color:var(--ink);font-family:var(--font-an
   </section>
 
   <div class="sp-grid">
-    <section class="sp-card" id="grafico-ng">
-      <h2>Nota Global: 2025 e projeção 2026</h2>
-      <p class="sp-note">Círculo vazado: boletim 2025. Ponto cheio: cenário escolhido. A barra cobre do conservador ao otimista.</p>
-      <div class="sp-chart" id="chart-ng" data-source="projecao"></div>
+    <section class="sp-card" id="turmas">
+      <h2 id="tit-turmas">Projeção por turma</h2>
+      <p class="sp-note">Mesmo cálculo aplicado a cada turma. O SARESP não publica turma; use para ver quem puxa a nota do ano. A coluna de participação mostra a presença no Simulado SARESP de 19/10, a única medida de presença por turma.</p>
+      <div class="sp-wrap">
+        <table class="sp-tab" id="tab-turmas" data-source="projecao" data-row-key="chave">
+          <thead><tr><th data-field="rotulo">Turma</th><th class="sp-ng" data-field="NG">Nota Global</th><th data-field="PART">Presença no Simulado</th><th data-field="LP">LP</th><th data-field="MAT">MAT</th><th data-field="ING">LI</th><th data-field="GEO">GEO</th><th data-field="HIS">HIS</th><th data-field="CIE">CIE</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
     </section>
     <section class="sp-card" id="lacunas">
       <h2>O que separa cada componente do próximo patamar</h2>
-      <p class="sp-note">Pontos percentuais de acerto, no índice da projeção, que faltam para sair do baixo (chegar a 4,1) e para igualar a nota de 2025 do mesmo ano. Ordenado da nota mais baixa para a mais alta.</p>
+      <p class="sp-note" id="nota-lac">Pontos percentuais de acerto que faltam para sair do baixo (chegar a 4,1) e para igualar a nota de 2025 do mesmo ano. Ordenado da nota mais baixa para a mais alta.</p>
       <div class="sp-wrap sp-scroll">
         <table class="sp-tab" id="tab-lac" data-source="lacunas" data-row-key="chave">
           <thead><tr><th data-field="rotulo">Ano · componente</th><th data-field="nota">Projeção</th><th data-field="nota2025">2025</th><th data-field="pp_medio">Até 4,1</th><th data-field="pp_2025">Até 2025</th></tr></thead>
@@ -177,35 +213,24 @@ body{margin:0;background:var(--plane);color:var(--ink);font-family:var(--font-an
     </section>
   </div>
 
-  <section class="sp-card" id="turmas">
-    <h2>Projeção por turma</h2>
-    <p class="sp-note">Mesmo cálculo aplicado a cada turma. O SARESP não publica turma; use para ver quem puxa a nota do ano. Com 25 a 40 estudantes por turma, diferenças de até 0,3 ponto ficam dentro do ruído. A participação na Prova Paulista não veio por turma; a coluna mostra a presença no Simulado SARESP de 19/10.</p>
-    <div class="sp-wrap">
-      <table class="sp-tab" id="tab-turmas" data-source="projecao" data-row-key="chave">
-        <thead><tr><th data-field="rotulo">Turma</th><th class="sp-ng" data-field="NG">Nota Global</th><th data-field="PART">Presença no Simulado</th><th data-field="LP">LP</th><th data-field="MAT">MAT</th><th data-field="ING">LI</th><th data-field="GEO">GEO</th><th data-field="HIS">HIS</th><th data-field="CIE">CIE</th></tr></thead>
-        <tbody></tbody>
-      </table>
-    </div>
-  </section>
-
   <div class="sp-grid">
     <section class="sp-card sp-method" id="metodo">
-      <h2>Como a projeção foi feita</h2>
+      <h2>Como as projeções foram feitas</h2>
       <ol>
-        <li><span class="sp-strong">Índice 2026.</span> Para cada ano, turma e componente, média ponderada do percentual de acerto do painel Trajetória. Base Prova Paulista: 1º bim 20%, 2º bim 30%, 3º bim 50%. Base “as cinco medidas”: 1º bim 15%, 2º bim 20%, Diagnóstica 10% (só LP e MAT), 3º bim 35%, Simulado 20%.</li>
-        <li><span class="sp-strong">Conversão para a escala SARESP.</span> As turmas que hoje estão no 7º, 8º e 9º fizeram o SARESP 2025 no 6º, 7º e 8º. Comparando o boletim delas com o índice 2026, nos 18 pares de coorte e componente, a nota do SARESP (×10) equivaleu a <span class="sp-strong" id="k-txt" data-source="calibracao" data-field="k">—</span> vez o índice de acerto. Esse fator multiplica o índice de todos os anos, inclusive o 6º.</li>
+        <li><span class="sp-strong">Três bases, calculadas em separado.</span> Prova Paulista: média ponderada do acerto do 1º bim (20%), 2º bim (30%) e 3º bim (50%). Simulado SARESP: só o acerto no Simulado de 19/10. Ambas: metade Prova Paulista (com os mesmos pesos entre bimestres) e metade Simulado.</li>
+        <li><span class="sp-strong">Conversão para a escala SARESP.</span> As turmas que hoje estão no 7º, 8º e 9º fizeram o SARESP 2025 no 6º, 7º e 8º. Comparando o boletim delas com o acerto delas em 2026, nos 18 pares de coorte e componente, a nota do SARESP (×10) equivaleu a <span class="sp-strong" id="k-txt" data-source="calibracao" data-field="k">—</span> vez o acerto na base escolhida. Cada base tem o seu fator, aplicado a todos os anos, inclusive o 6º.</li>
         <li><span class="sp-strong">Cenários.</span> Conservador e otimista usam o 1º e o 3º quartis das razões entre os 18 pares (fatores <span id="kc-txt" data-source="calibracao" data-field="k_cons">—</span> e <span id="ko-txt" data-source="calibracao" data-field="k_otim">—</span>).</li>
-        <li><span class="sp-strong">Nota Global.</span> Média dos seis componentes com peso 1,5 para LP e MAT. Esses pesos reproduzem as quatro Notas Globais do boletim 2025; a média simples erra o 8º e o 9º.</li>
-        <li><span class="sp-strong">Participação.</span> Por ano, média ponderada da participação na Prova Paulista: 1º bim 20%, 2º bim 30%, 3º bim 50%. Por turma, presença no Simulado SARESP (presentes sobre presentes mais ausentes).</li>
+        <li><span class="sp-strong">Nota Global.</span> Média dos seis componentes com peso 1,5 para LP e MAT. Esses pesos reproduzem as quatro Notas Globais do boletim 2025.</li>
+        <li><span class="sp-strong">Participação.</span> Na projeção pela Prova Paulista, média ponderada da participação nos três bimestres (20%, 30%, 50%). Na projeção pelo Simulado, presentes no Simulado sobre presentes mais ausentes. Em Ambas, a média das duas.</li>
       </ol>
-      <p class="sp-note">Limites: o SARESP é equalizado e a projeção não; cada prova tem dificuldade própria. Trate os números como faixa provável, não como resultado. O ranking estadual e o da Diretoria dependem das outras escolas e não podem ser projetados. No arquivo do Trajetória, o Simulado do 9º ano registra CIE, HIS, GEO e LI em dobro (acertos acima de 100%); aqui esses valores foram divididos por dois, o que bate com o acerto questão a questão.</p>
+      <p class="sp-note">Limites: o SARESP é equalizado e as projeções não. O Simulado tem 5 questões por componente (10 de LP e MAT no 9º), então cada questão move o componente em 20 pontos de acerto; a Prova Paulista é a base mais estável. O ranking estadual e o da Diretoria dependem das outras escolas e não podem ser projetados. No arquivo do Trajetória, o Simulado do 9º ano registra CIE, HIS, GEO e LI em dobro; aqui esses valores foram divididos por dois, o que bate com o acerto questão a questão.</p>
     </section>
     <section class="sp-card" id="coortes">
       <h2>Calibração por coorte</h2>
-      <p class="sp-note">Nota do SARESP 2025 de cada coorte ao lado do índice 2026 das mesmas turmas. Razão = nota × 10 ÷ índice.</p>
+      <p class="sp-note">Nota do SARESP 2025 de cada coorte ao lado do acerto 2026 das mesmas turmas, na base escolhida. Razão = nota × 10 ÷ acerto.</p>
       <div class="sp-wrap sp-scroll">
         <table class="sp-tab" id="tab-coortes" data-source="coortes" data-row-key="chave">
-          <thead><tr><th data-field="coorte">Coorte</th><th data-field="compNome">Comp.</th><th data-field="saresp2025">SARESP 2025</th><th data-field="indice2026">Índice 2026</th><th data-field="razao">Razão</th></tr></thead>
+          <thead><tr><th data-field="coorte">Coorte</th><th data-field="compNome">Comp.</th><th data-field="saresp2025">SARESP 2025</th><th data-field="indice2026">Acerto 2026</th><th data-field="razao">Razão</th></tr></thead>
           <tbody></tbody>
         </table>
       </div>
@@ -238,17 +263,18 @@ window.dash = (() => {
     setParams: (p) => { Object.assign(params, p); roda(); },
     resetParams: () => { params = { cenario: 'provavel', base: 'pp', comparar: true }; roda(); },
     setLink: () => {},
-    colors: ['var(--lp)'],
+    colors: ['var(--lp)', 'var(--mat)', 'var(--amb)'],
   };
 })();
 </script>
 <script>
+
 dash.calc('indice', {
   title: 'Índice de acerto 2026',
-  description: 'Média ponderada do acerto (%) nas medidas de 2026, por base, ano/turma e componente.',
+  description: 'Acerto (%) de 2026 em cada base: Prova Paulista (1º, 2º e 3º bim com pesos 20/30/50%), Simulado SARESP e ambas (metade de cada), por ano/turma e componente.',
   inputs: ['medidas_2026'],
   fn: (medidas_2026) => {
-    const P = { pp: { pp1: .2, pp2: .3, pp3: .5 }, todas: { pp1: .15, pp2: .2, oe: .1, pp3: .35, sim: .2 } };
+    const P = { pp: { pp1: .2, pp2: .3, pp3: .5 }, sim: { sim: 1 }, ambas: { pp1: .1, pp2: .15, pp3: .25, sim: .5 } };
     const g = new Map();
     for (const r of medidas_2026) {
       const k = r.escopo + '|' + r.comp;
@@ -283,7 +309,7 @@ dash.calc('calibracao', {
   title: 'Fator de conversão',
   description: 'Soma das notas SARESP 2025 (×10) dividida pela soma dos índices 2026 das coortes; cenários pelos quartis das razões.',
   inputs: ['coortes'],
-  fn: (coortes) => ['pp', 'todas'].map(base => {
+  fn: (coortes) => ['pp', 'sim', 'ambas'].map(base => {
     const c = coortes.filter(r => r.base === base);
     const k = c.reduce((a, r) => a + r.saresp2025 * 10, 0) / c.reduce((a, r) => a + r.indice2026, 0);
     const r = c.map(x => x.saresp2025 * 10 / x.indice2026).sort((a, b) => a - b);
@@ -296,7 +322,7 @@ dash.calc('calibracao', {
 
 dash.calc('projecao', {
   title: 'Boletim projetado',
-  description: 'Nota = fator × índice ÷ 10 por componente; Nota Global com peso 1,5 em LP e MAT; participação do ano pela Prova Paulista (20/30/50%) e da turma pela presença no Simulado. Inclui as linhas do boletim 2025.',
+  description: 'Nota = fator × índice ÷ 10 por componente; Nota Global com peso 1,5 em LP e MAT; participação pela Prova Paulista (20/30/50%) na base Prova Paulista, pela presença no Simulado na base Simulado e nas turmas, e pela média das duas na base Ambas. Inclui as linhas do boletim 2025.',
   inputs: ['indice', 'calibracao', 'presenca_simulado', 'participacao_pp', 'saresp_2025'],
   fn: (indice, calibracao, presenca_simulado, participacao_pp, saresp_2025) => {
     const C = ['LP', 'MAT', 'ING', 'GEO', 'HIS', 'CIE'], W = { LP: 1.5, MAT: 1.5, ING: 1, GEO: 1, HIS: 1, CIE: 1 };
@@ -316,7 +342,7 @@ dash.calc('projecao', {
         let s = 0, w = 0;
         for (const c of C) { const n = Math.min(10, k * e.v[c] / 10); row[c] = r1(n); s += W[c] * n; w += W[c]; }
         row.NG = r1(s / w);
-        row.PART = r1(e.nivel === 'ano' ? partPP.get(e.ano) : pres.get(e.escopo));
+        row.PART = r1(e.nivel !== 'ano' || cal.base === 'sim' ? pres.get(e.escopo) : cal.base === 'pp' ? partPP.get(e.ano) : (partPP.get(e.ano) + pres.get(e.escopo)) / 2);
         out.push(row);
       }
     }
@@ -336,7 +362,7 @@ dash.calc('nota_final', {
   fn: (projecao, saresp_2025) => {
     const nf25 = Number(saresp_2025.find(r => r.ano === 'AF' && r.comp === 'NF').valor);
     const out = [];
-    for (const base of ['pp', 'todas']) for (const cenario of ['conservador', 'provavel', 'otimista']) {
+    for (const base of ['pp', 'sim', 'ambas']) for (const cenario of ['conservador', 'provavel', 'otimista']) {
       const ng = projecao.filter(r => r.base === base && r.cenario === cenario && r.nivel === 'ano').map(r => r.NG);
       const nf = Math.round(ng.reduce((a, b) => a + b, 0) / ng.length * 10) / 10;
       out.push({ chave: base + '|' + cenario, base, cenario, NF: nf, NF2025: nf25, delta: Math.round((nf - nf25) * 10) / 10 });
@@ -365,49 +391,72 @@ dash.calc('lacunas', {
   }
 });
 
+
+dash.calc('comparacao', {
+  title: 'Prova Paulista × Simulado',
+  description: 'Nota Global de cada ano e Nota Final nas três projeções (Prova Paulista, Simulado, ambas), lado a lado com 2025; diferença = Simulado − Prova Paulista.',
+  inputs: ['projecao', 'nota_final'],
+  fn: (projecao, nota_final) => {
+    const out = [];
+    for (const cenario of ['conservador', 'provavel', 'otimista']) {
+      const ng = (base, ano) => projecao.find(r => r.base === base && r.cenario === cenario && r.nivel === 'ano' && r.ano === ano).NG;
+      for (const ano of ['6', '7', '8', '9']) {
+        const pp = ng('pp', ano), sim = ng('sim', ano);
+        out.push({ chave: cenario + '|' + ano, cenario, ano, rotulo: ano + 'º ano', pp, sim, ambas: ng('ambas', ano), dif: Math.round((sim - pp) * 10) / 10, of: projecao.find(r => r.base === 'oficial' && r.ano === ano).NG });
+      }
+      const nf = base => nota_final.find(r => r.base === base && r.cenario === cenario);
+      out.push({ chave: cenario + '|AF', cenario, ano: 'AF', rotulo: 'Nota Final', pp: nf('pp').NF, sim: nf('sim').NF, ambas: nf('ambas').NF, dif: Math.round((nf('sim').NF - nf('pp').NF) * 10) / 10, of: nf('pp').NF2025 });
+    }
+    return out;
+  }
+});
 (() => {
   const P = { cenario: 'provavel', base: 'pp', comparar: true };
   const prm = () => Object.assign({}, P, dash.params());
   const fmt = (v, d = 1) => v == null || isNaN(v) ? '—' : Number(v).toFixed(d).replace('.', ',');
+  const sgn = v => (v > 0 ? '+' : v < 0 ? '−' : '') + fmt(Math.abs(v));
   const faixa = v => v == null ? '' : v <= 4 ? 'sp-bad' : v <= 6 ? 'sp-warn' : 'sp-ok';
   const CEN = { conservador: 'conservador', provavel: 'provável', otimista: 'otimista' };
+  const BASE = { pp: 'Prova Paulista', sim: 'Simulado SARESP', ambas: 'Ambas' };
+  const BASES = ['pp', 'sim', 'ambas'];
   const COLS = ['NG', 'PART', 'LP', 'MAT', 'ING', 'GEO', 'HIS', 'CIE'];
+  const root = document.querySelector('.sp');
+  root.style.setProperty('--sp-c-pp', dash.colors[0]);
+  root.style.setProperty('--sp-c-sim', dash.colors[1]);
+  root.style.setProperty('--sp-c-amb', dash.colors[2]);
   let animado = false;
 
   document.querySelectorAll('#seg-cenario button').forEach(b => b.addEventListener('click', () => dash.setParams({ cenario: b.dataset.v })));
-  document.querySelectorAll('#seg-base button').forEach(b => b.addEventListener('click', () => dash.setParams({ base: b.dataset.v })));
+  document.querySelectorAll('#abas button').forEach(b => b.addEventListener('click', () => { dash.setParams({ base: b.dataset.v }); dash.setLink('abas'); }));
   document.getElementById('chk-2025').addEventListener('change', e => dash.setParams({ comparar: e.target.checked }));
 
   const fail = (el) => { el.replaceChildren(); const d = document.createElement('div'); d.className = 'sp-fail'; const i = document.createElement('i'); const t = document.createElement('span'); t.textContent = 'Failed to load'; d.append(i, t); el.append(d); };
+  const td = (tr, txt, cls) => { const c = document.createElement('td'); c.textContent = txt; if (cls) c.className = cls; tr.append(c); return c; };
 
   function linha(tbody, r, cls) {
     const tr = document.createElement('tr');
     tr.dataset.key = r.chave; if (cls) tr.className = cls;
-    const td0 = document.createElement('td'); td0.textContent = r.rotulo; tr.append(td0);
+    td(tr, r.rotulo);
     for (const c of COLS) {
-      const td = document.createElement('td');
-      if (c === 'NG') td.classList.add('sp-ng');
       if (c === 'PART') {
-        td.textContent = r.PART == null ? '—' : fmt(r.PART) + '%';
-        if (r.PART != null && r.PART < 80) { const s = document.createElement('span'); s.className = 'sp-alert'; s.textContent = '⚠'; s.title = 'Participação abaixo de 80%'; td.append(s); }
-      } else if (c === 'NG') { td.textContent = fmt(r[c]); }
-      else { td.textContent = fmt(r[c]); td.classList.add(faixa(r[c])); }
-      tr.append(td);
+        const cell = td(tr, r.PART == null ? '—' : fmt(r.PART) + '%');
+        if (r.PART != null && r.PART < 80) { const s = document.createElement('span'); s.className = 'sp-alert'; s.textContent = '⚠'; s.title = 'Participação abaixo de 80%'; cell.append(s); }
+      } else if (c === 'NG') td(tr, fmt(r[c]), 'sp-ng');
+      else td(tr, fmt(r[c]), faixa(r[c]));
     }
     tbody.append(tr);
   }
 
-  function grafico(el, proj, of, p) {
+  function grafico(el, proj, p) {
     el.replaceChildren();
     const W = Math.max(280, el.clientWidth), anos = ['6', '7', '8', '9'];
-    const rows = anos.map(a => {
-      const g = c => proj.find(r => r.base === p.base && r.cenario === c && r.escopo === a);
-      return { ano: a, of: of.find(r => r.ano === a).NG, lo: g('conservador').NG, mid: g(p.cenario).NG, hi: g('otimista').NG };
-    });
-    const ml = 56, mr = 16, mt = 22, mb = 30, rowH = 44, H = mt + mb + rowH * anos.length;
-    const all = rows.flatMap(r => [r.of, r.lo, r.hi]);
+    const ng = (b, c, a) => proj.find(r => r.base === b && r.cenario === c && r.escopo === a && r.nivel === 'ano').NG;
+    const rows = anos.map(a => ({ ano: a, of: proj.find(r => r.base === 'oficial' && r.ano === a).NG,
+      s: BASES.map((b, i) => ({ b, i, lo: ng(b, 'conservador', a), mid: ng(b, p.cenario, a), hi: ng(b, 'otimista', a) })) }));
+    const ml = 56, mr = 16, mt = 22, mb = 30, rowH = 64, H = mt + mb + rowH * anos.length;
+    const all = rows.flatMap(r => [r.of, ...r.s.flatMap(s => [s.lo, s.hi])]);
     const x = d3.scaleLinear([Math.min(3, Math.floor(d3.min(all) * 2) / 2), Math.max(6.5, Math.ceil(d3.max(all) * 2) / 2)], [ml, W - mr]);
-    const y = d3.scaleBand(anos, [mt, H - mb]).padding(.4);
+    const y = d3.scaleBand(anos, [mt, H - mb]).padding(.25);
     const svg = d3.select(el).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`);
     svg.append('rect').attr('x', x(x.domain()[0])).attr('y', mt).attr('width', x(4) - x(x.domain()[0])).attr('height', H - mt - mb).attr('fill', 'var(--color-bad)').attr('opacity', .06);
     svg.append('rect').attr('x', x(6)).attr('y', mt).attr('width', Math.max(0, x(x.domain()[1]) - x(6))).attr('height', H - mt - mb).attr('fill', 'var(--color-ok)').attr('opacity', .06);
@@ -419,18 +468,18 @@ dash.calc('lacunas', {
     svg.append('text').attr('x', x(6) + 4).attr('y', mt - 9).attr('fill', 'var(--color-fg-muted)').attr('font-size', 'var(--cds-font-size-caption)').text('alto');
     const g = svg.append('g').selectAll('g').data(rows).join('g').attr('transform', d => `translate(0,${y(d.ano) + y.bandwidth() / 2})`);
     g.append('text').attr('x', 0).attr('dy', '.35em').attr('fill', 'var(--color-fg)').attr('font-size', 'var(--cds-font-size-caption)').text(d => d.ano + 'º ano');
-    g.append('line').attr('x1', d => x(d.lo)).attr('x2', d => x(d.hi)).attr('stroke', dash.colors[0]).attr('stroke-width', 8).attr('stroke-linecap', 'round').attr('opacity', .22);
-    g.append('line').attr('x1', d => x(d.of)).attr('x2', d => x(d.mid)).attr('stroke', 'var(--cds-chart-muted)').attr('stroke-width', 1.5);
+    g.append('line').attr('x1', d => x(d.of)).attr('x2', d => x(d.of)).attr('y1', -17).attr('y2', 17).attr('stroke', 'var(--cds-chart-muted)').attr('stroke-width', 1).attr('stroke-dasharray', '2 2');
+    const sg = g.selectAll('g.s').data(d => d.s).join('g').attr('class', 's').attr('transform', s => `translate(0,${(s.i - 1) * 10})`);
+    sg.append('line').attr('x1', s => x(s.lo)).attr('x2', s => x(s.hi)).attr('stroke', s => dash.colors[s.i]).attr('stroke-width', 6).attr('stroke-linecap', 'round').attr('opacity', .22);
+    sg.append('circle').attr('cx', s => x(s.mid)).attr('r', 5).attr('fill', s => dash.colors[s.i]);
     g.append('circle').attr('cx', d => x(d.of)).attr('r', 6).attr('fill', 'var(--color-panel)').attr('stroke', 'var(--cds-chart-muted)').attr('stroke-width', 2);
-    g.append('circle').attr('class', 'sp-dot').attr('cx', d => x(d.mid)).attr('r', 6.5).attr('fill', dash.colors[0]);
     const tip = d3.select(el).append('div').attr('class', 'sp-tip');
-    g.append('rect').attr('x', ml).attr('y', -y.bandwidth()).attr('width', W - ml - mr).attr('height', y.bandwidth() * 2).attr('fill', 'transparent')
+    g.append('rect').attr('x', ml).attr('y', -y.bandwidth() / 2).attr('width', W - ml - mr).attr('height', y.bandwidth()).attr('fill', 'transparent')
       .on('mousemove', (ev, d) => {
         tip.html('');
-        tip.append('div').attr('class', 'sp-tip-h').text(d.ano + 'º ano · Nota Global');
-        tip.append('div').text('2025 (boletim): ' + fmt(d.of));
-        tip.append('div').text('2026 ' + CEN[p.cenario] + ': ' + fmt(d.mid));
-        tip.append('div').text('Faixa: ' + fmt(d.lo) + ' a ' + fmt(d.hi));
+        tip.append('div').attr('class', 'sp-tip-h').text(d.ano + 'º ano · Nota Global · cenário ' + CEN[p.cenario]);
+        tip.append('div').text('Boletim 2025: ' + fmt(d.of));
+        d.s.forEach(s => tip.append('div').text(BASE[s.b] + ': ' + fmt(s.mid) + '  (' + fmt(s.lo) + ' a ' + fmt(s.hi) + ')'));
         const [mx, my] = d3.pointer(ev, el), tw = tip.node().offsetWidth;
         tip.style('left', Math.min(Math.max(0, mx + 12), el.clientWidth - tw) + 'px').style('top', (my + 12) + 'px').style('opacity', 1);
       })
@@ -441,28 +490,52 @@ dash.calc('lacunas', {
   dash.onData(() => {
     const p = prm();
     document.querySelectorAll('#seg-cenario button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === p.cenario)));
-    document.querySelectorAll('#seg-base button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === p.base)));
+    document.querySelectorAll('#abas button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.v === p.base)));
     document.getElementById('chk-2025').checked = !!p.comparar;
+    document.getElementById('tit-boletim').textContent = 'Anos Finais do EF · boletim projetado ' + ({ pp: 'pela Prova Paulista', sim: 'pelo Simulado SARESP', ambas: 'por ambas (Prova Paulista + Simulado)' })[p.base];
+    document.getElementById('tit-turmas').textContent = 'Projeção por turma · ' + BASE[p.base];
+    document.getElementById('nota-boletim').textContent = 'Mesmas colunas do boletim oficial. Notas de 0 a 10. Participação estimada ' +
+      ({ pp: 'pela participação na Prova Paulista (1º, 2º e 3º bimestres, pesos 20%, 30% e 50%).', sim: 'pela presença no Simulado SARESP de 19/10.', ambas: 'pela média entre a participação na Prova Paulista e a presença no Simulado.' })[p.base] + ' O ícone ⚠ marca participação abaixo de 80%, como no boletim.';
+    document.getElementById('aba-nota').textContent = ({
+      pp: 'Base: acerto na Prova Paulista dos três bimestres. É a série mais estável e comparável do ano.',
+      sim: 'Base: acerto no Simulado SARESP de 19/10. Com 5 questões por componente, uma questão a mais ou a menos move o componente em 20 pontos de acerto: leia a direção, não a casa decimal.',
+      ambas: 'Base: metade Prova Paulista (três bimestres) e metade Simulado SARESP, calibrada como as outras. Junta a estabilidade da Prova Paulista com o formato do SARESP.' })[p.base];
+    document.getElementById('nota-lac').textContent = 'Pontos percentuais de acerto ' + ({ pp: 'na Prova Paulista', sim: 'no Simulado (cada questão vale 20 p.p.)', ambas: 'no índice combinado' })[p.base] + ' que faltam para sair do baixo (chegar a 4,1) e para igualar a nota de 2025 do mesmo ano. Ordenado da nota mais baixa para a mais alta.';
 
-    const pr = dash.data('projecao'), nf = dash.data('nota_final'), s25 = dash.data('saresp_2025'), lac = dash.data('lacunas'), cal = dash.data('calibracao'), coo = dash.data('coortes');
+    const pr = dash.data('projecao'), nf = dash.data('nota_final'), s25 = dash.data('saresp_2025'), lac = dash.data('lacunas'), cal = dash.data('calibracao'), coo = dash.data('coortes'), cmp = dash.data('comparacao');
     const ok = d => d.status === 'ok' && Array.isArray(d.data) && d.data.length;
 
-    // Nota Final
-    const elNF = document.getElementById('kpi-nf'), elD = document.getElementById('kpi-delta'), el25 = document.getElementById('kpi-nf25');
     if (ok(nf)) {
-      const r = nf.data.find(x => x.base === p.base && x.cenario === p.cenario);
-      const lo = nf.data.find(x => x.base === p.base && x.cenario === 'conservador'), hi = nf.data.find(x => x.base === p.base && x.cenario === 'otimista');
-      [elNF, elD].forEach(e => e.classList.remove('dash-skeleton'));
-      elNF.dataset.where = 'chave=' + encodeURIComponent(r.chave); elD.dataset.where = elNF.dataset.where;
-      elNF.textContent = fmt(r.NF); elNF.className = 'sp-kpi-val ' + faixa(r.NF);
-      elD.textContent = (r.delta > 0 ? '+' : r.delta < 0 ? '−' : '') + fmt(Math.abs(r.delta));
-      elD.className = 'sp-kpi-val ' + (r.delta < 0 ? 'sp-bad' : r.delta > 0 ? 'sp-ok' : '');
-      document.getElementById('lab-nf').textContent = 'Projeção 2026 · cenário ' + CEN[p.cenario];
-      document.getElementById('kpi-nf-sub').textContent = 'Faixa: ' + fmt(lo.NF) + ' a ' + fmt(hi.NF);
-    } else if (nf.status === 'error') { elNF.classList.remove('dash-skeleton'); elNF.textContent = '—'; }
-    if (ok(s25)) { el25.classList.remove('dash-skeleton'); el25.textContent = fmt(s25.data.find(r => r.ano === 'AF' && r.comp === 'NF').valor); el25.className = 'sp-kpi-val ' + faixa(Number(s25.data.find(r => r.ano === 'AF' && r.comp === 'NF').valor)); }
+      for (const b of BASES) {
+        const r = nf.data.find(x => x.base === b && x.cenario === p.cenario);
+        const lo = nf.data.find(x => x.base === b && x.cenario === 'conservador'), hi = nf.data.find(x => x.base === b && x.cenario === 'otimista');
+        const el = document.getElementById('kpi-' + b);
+        el.classList.remove('dash-skeleton'); el.dataset.where = 'chave=' + encodeURIComponent(r.chave);
+        el.textContent = fmt(r.NF); el.className = 'sp-kpi-val ' + faixa(r.NF);
+        document.getElementById('kpi-' + b + '-sub').textContent = sgn(r.delta) + ' em relação a 2025 · faixa ' + fmt(lo.NF) + ' a ' + fmt(hi.NF);
+      }
+    }
+    if (ok(s25)) { const el = document.getElementById('kpi-nf25'), v = Number(s25.data.find(r => r.ano === 'AF' && r.comp === 'NF').valor); el.classList.remove('dash-skeleton'); el.textContent = fmt(v); el.className = 'sp-kpi-val ' + faixa(v); }
 
-    // Boletim por ano
+    const tC = document.querySelector('#tab-comp tbody');
+    if (ok(cmp)) {
+      tC.replaceChildren();
+      const rs = cmp.data.filter(r => r.cenario === p.cenario);
+      rs.forEach(r => {
+        const tr = document.createElement('tr'); tr.dataset.key = r.chave; if (r.ano === 'AF') tr.className = 'sp-proj sp-sep';
+        td(tr, r.rotulo); td(tr, fmt(r.pp), faixa(r.pp)); td(tr, fmt(r.sim), faixa(r.sim)); td(tr, fmt(r.ambas), faixa(r.ambas)); td(tr, sgn(r.dif)); td(tr, fmt(r.of), faixa(r.of));
+        tC.append(tr);
+      });
+      const tk = document.getElementById('takeaway');
+      const af = rs.find(r => r.ano === 'AF'), anos = rs.filter(r => r.ano !== 'AF');
+      const maior = anos.reduce((m, r) => Math.abs(r.dif) > Math.abs(m.dif) ? r : m);
+      const cai = anos.filter(r => r.pp < r.of && r.sim < r.of).map(r => r.ano + 'º');
+      tk.classList.remove('dash-skeleton');
+      tk.textContent = `No cenário ${CEN[p.cenario]}, a Nota Final projetada é ${fmt(af.pp)} pela Prova Paulista e ${fmt(af.sim)} pelo Simulado SARESP (${fmt(af.ambas)} combinando as duas); em 2025 foi ${fmt(af.of)}. ` +
+        (Math.abs(maior.dif) >= 0.3 ? `As duas bases divergem mais no ${maior.ano}º ano (${fmt(maior.pp)} e ${fmt(maior.sim)}). ` : 'As duas bases ficam a até 0,2 ponto uma da outra em todos os anos. ') +
+        (cai.length ? `Nas duas, ${cai.length > 1 ? 'os anos que ficam' : 'o ano que fica'} abaixo de 2025: ${cai.join(', ')}.` : 'Nenhum ano fica abaixo de 2025 nas duas bases ao mesmo tempo.');
+    }
+
     const tA = document.querySelector('#tab-anos tbody'), tT = document.querySelector('#tab-turmas tbody'), ch = document.getElementById('chart-ng');
     if (ok(pr)) {
       const proj = pr.data.filter(r => r.base === p.base && r.cenario === p.cenario);
@@ -474,47 +547,31 @@ dash.calc('lacunas', {
       });
       tT.replaceChildren();
       proj.filter(r => r.nivel === 'turma').sort((a, b) => a.escopo.localeCompare(b.escopo, 'pt')).forEach(r => linha(tT, r, ''));
-      if (ch.clientWidth > 0) grafico(ch, pr.data, of, p);
-
-      // frase-resumo
-      const tk = document.getElementById('takeaway');
-      if (ok(nf)) {
-        const r = nf.data.find(x => x.base === p.base && x.cenario === p.cenario);
-        const dif = ['6', '7', '8', '9'].map(a => ({ a, d: proj.find(x => x.nivel === 'ano' && x.escopo === a).NG - of.find(x => x.ano === a).NG, n: proj.find(x => x.nivel === 'ano' && x.escopo === a).NG, o: of.find(x => x.ano === a).NG }));
-        const pior = dif.reduce((m, x) => x.d < m.d ? x : m), melhor = dif.reduce((m, x) => x.d > m.d ? x : m);
-        const baixos = proj.filter(x => x.nivel === 'ano').reduce((s, x) => s + ['LP', 'MAT', 'ING', 'GEO', 'HIS', 'CIE'].filter(c => x[c] <= 4).length, 0);
-        tk.classList.remove('dash-skeleton');
-        tk.textContent = `No cenário ${CEN[p.cenario]}, a Nota Final dos Anos Finais fica em ${fmt(r.NF)}, ${r.delta < 0 ? 'abaixo' : r.delta > 0 ? 'acima' : 'no mesmo nível'} ${r.delta === 0 ? 'de' : 'dos'} ${fmt(r.NF2025)} de 2025. ` +
-          (pior.d < 0 ? `O ${pior.a}º ano é o que mais recua (${fmt(pior.o)} → ${fmt(pior.n)})` : 'Nenhum ano recua') +
-          (melhor.d > 0 ? ` e o ${melhor.a}º o que mais avança (${fmt(melhor.o)} → ${fmt(melhor.n)}). ` : '. ') +
-          `${baixos} das 24 notas de componente ficam em baixo desempenho.`;
-      }
+      if (ch.clientWidth > 0) grafico(ch, pr.data, p);
     } else if (pr.status === 'error') { fail(ch); }
 
-    // Lacunas
     const tL = document.querySelector('#tab-lac tbody');
     if (ok(lac)) {
       tL.replaceChildren();
       lac.data.filter(r => r.base === p.base && r.cenario === p.cenario).sort((a, b) => a.nota - b.nota || a.rotulo.localeCompare(b.rotulo)).forEach(r => {
         const tr = document.createElement('tr'); tr.dataset.key = r.chave;
-        const cells = [r.rotulo, fmt(r.nota), fmt(r.nota2025), r.pp_medio ? '+' + r.pp_medio + ' p.p.' : '—', r.pp_2025 ? '+' + r.pp_2025 + ' p.p.' : '—'];
-        cells.forEach((t, i) => { const td = document.createElement('td'); td.textContent = t; if (i === 1) td.className = faixa(r.nota); if (i === 2) td.className = faixa(r.nota2025); tr.append(td); });
+        td(tr, r.rotulo); td(tr, fmt(r.nota), faixa(r.nota)); td(tr, fmt(r.nota2025), faixa(r.nota2025));
+        td(tr, r.pp_medio ? '+' + r.pp_medio + ' p.p.' : '—'); td(tr, r.pp_2025 ? '+' + r.pp_2025 + ' p.p.' : '—');
         tL.append(tr);
       });
     }
 
-    // Método
     if (ok(cal)) {
       const c = cal.data.find(x => x.base === p.base), w = 'base=' + p.base;
       [['k-txt', 'k'], ['kc-txt', 'k_cons'], ['ko-txt', 'k_otim']].forEach(([id, f]) => { const e = document.getElementById(id); e.dataset.where = w; e.textContent = fmt(c[f], 3); });
     }
-    const tC = document.querySelector('#tab-coortes tbody');
+    const tK = document.querySelector('#tab-coortes tbody');
     if (ok(coo)) {
-      tC.replaceChildren();
+      tK.replaceChildren();
       coo.data.filter(r => r.base === p.base).forEach(r => {
         const tr = document.createElement('tr'); tr.dataset.key = r.chave;
-        [r.coorte, r.compNome, fmt(r.saresp2025), fmt(r.indice2026) + '%', fmt(r.razao, 2)].forEach(t => { const td = document.createElement('td'); td.textContent = t; tr.append(td); });
-        tC.append(tr);
+        [r.coorte, r.compNome, fmt(r.saresp2025), fmt(r.indice2026) + '%', fmt(r.razao, 2)].forEach(t => td(tr, t));
+        tK.append(tr);
       });
     }
   });
