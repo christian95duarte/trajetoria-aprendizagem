@@ -221,7 +221,7 @@ body{margin:0;background:var(--plane);color:var(--ink);font-family:var(--font-an
         <li><span class="sp-strong">Conversão para a escala SARESP.</span> As turmas que hoje estão no 7º, 8º e 9º fizeram o SARESP 2025 no 6º, 7º e 8º. Comparando o boletim delas com o acerto delas em 2026, nos 18 pares de coorte e componente, a nota do SARESP (×10) equivaleu a <span class="sp-strong" id="k-txt" data-source="calibracao" data-field="k">—</span> vez o acerto na base escolhida. Cada base tem o seu fator, aplicado a todos os anos, inclusive o 6º.</li>
         <li><span class="sp-strong">Cenários.</span> Conservador e otimista usam o 1º e o 3º quartis das razões entre os 18 pares (fatores <span id="kc-txt" data-source="calibracao" data-field="k_cons">—</span> e <span id="ko-txt" data-source="calibracao" data-field="k_otim">—</span>).</li>
         <li><span class="sp-strong">Nota Global.</span> Média dos seis componentes com peso 1,5 para LP e MAT. Esses pesos reproduzem as quatro Notas Globais do boletim 2025.</li>
-        <li><span class="sp-strong">Participação.</span> Na projeção pela Prova Paulista, média ponderada da participação nos três bimestres (20%, 30%, 50%). Na projeção pelo Simulado, presentes no Simulado sobre presentes mais ausentes. Em Ambas, a média das duas.</li>
+        <li><span class="sp-strong">Participação.</span> Na projeção pela Prova Paulista, média ponderada da participação nos três bimestres (20%, 30%, 50%). Na projeção pelo Simulado, média simples da participação na Prova Paulista dos três bimestres. Em Ambas, a média das duas. Nas turmas, presença no Simulado, a única medida por turma.</li>
       </ol>
       <p class="sp-note">Limites: o SARESP é equalizado e as projeções não. O Simulado tem 5 questões por componente (10 de LP e MAT no 9º), então cada questão move o componente em 20 pontos de acerto; a Prova Paulista é a base mais estável. O ranking estadual e o da Diretoria dependem das outras escolas e não podem ser projetados. No arquivo do Trajetória, o Simulado do 9º ano registra CIE, HIS, GEO e LI em dobro; aqui esses valores foram divididos por dois, o que bate com o acerto questão a questão.</p>
     </section>
@@ -322,14 +322,18 @@ dash.calc('calibracao', {
 
 dash.calc('projecao', {
   title: 'Boletim projetado',
-  description: 'Nota = fator × índice ÷ 10 por componente; Nota Global com peso 1,5 em LP e MAT; participação pela Prova Paulista (20/30/50%) na base Prova Paulista, pela presença no Simulado na base Simulado e nas turmas, e pela média das duas na base Ambas. Inclui as linhas do boletim 2025.',
+  description: 'Nota = fator × índice ÷ 10 por componente; Nota Global com peso 1,5 em LP e MAT; participação do ano pela Prova Paulista: média ponderada 20/30/50% na base Prova Paulista, média simples dos três bimestres na base Simulado e a média das duas em Ambas; nas turmas, presença no Simulado. Inclui as linhas do boletim 2025.',
   inputs: ['indice', 'calibracao', 'presenca_simulado', 'participacao_pp', 'saresp_2025'],
   fn: (indice, calibracao, presenca_simulado, participacao_pp, saresp_2025) => {
     const C = ['LP', 'MAT', 'ING', 'GEO', 'HIS', 'CIE'], W = { LP: 1.5, MAT: 1.5, ING: 1, GEO: 1, HIS: 1, CIE: 1 };
     const r1 = v => Math.round(v * 10) / 10;
     const pres = new Map(presenca_simulado.map(p => [p.escopo, 100 * p.presentes / (p.presentes + p.ausentes)]));
     const WP = { pp1: .2, pp2: .3, pp3: .5 }, partPP = new Map();
-    for (const p of participacao_pp) partPP.set(String(p.ano), (partPP.get(String(p.ano)) || 0) + WP[p.medida] * Number(p.pct));
+    const partM = new Map();
+    for (const p of participacao_pp) {
+      partPP.set(String(p.ano), (partPP.get(String(p.ano)) || 0) + WP[p.medida] * Number(p.pct));
+      partM.set(String(p.ano), (partM.get(String(p.ano)) || 0) + Number(p.pct) / 3);
+    }
     const out = [];
     for (const cal of calibracao) {
       const esc = new Map();
@@ -342,7 +346,7 @@ dash.calc('projecao', {
         let s = 0, w = 0;
         for (const c of C) { const n = Math.min(10, k * e.v[c] / 10); row[c] = r1(n); s += W[c] * n; w += W[c]; }
         row.NG = r1(s / w);
-        row.PART = r1(e.nivel !== 'ano' || cal.base === 'sim' ? pres.get(e.escopo) : cal.base === 'pp' ? partPP.get(e.ano) : (partPP.get(e.ano) + pres.get(e.escopo)) / 2);
+        row.PART = r1(e.nivel !== 'ano' ? pres.get(e.escopo) : cal.base === 'pp' ? partPP.get(e.ano) : cal.base === 'sim' ? partM.get(e.ano) : (partPP.get(e.ano) + partM.get(e.ano)) / 2);
         out.push(row);
       }
     }
@@ -495,7 +499,7 @@ dash.calc('comparacao', {
     document.getElementById('tit-boletim').textContent = 'Anos Finais do EF · boletim projetado ' + ({ pp: 'pela Prova Paulista', sim: 'pelo Simulado SARESP', ambas: 'por ambas (Prova Paulista + Simulado)' })[p.base];
     document.getElementById('tit-turmas').textContent = 'Projeção por turma · ' + BASE[p.base];
     document.getElementById('nota-boletim').textContent = 'Mesmas colunas do boletim oficial. Notas de 0 a 10. Participação estimada ' +
-      ({ pp: 'pela participação na Prova Paulista (1º, 2º e 3º bimestres, pesos 20%, 30% e 50%).', sim: 'pela presença no Simulado SARESP de 19/10.', ambas: 'pela média entre a participação na Prova Paulista e a presença no Simulado.' })[p.base] + ' O ícone ⚠ marca participação abaixo de 80%, como no boletim.';
+      ({ pp: 'pela participação na Prova Paulista (1º, 2º e 3º bimestres, pesos 20%, 30% e 50%).', sim: 'pela média simples da participação na Prova Paulista dos três bimestres.', ambas: 'pela média entre as participações usadas nas outras duas projeções.' })[p.base] + ' O ícone ⚠ marca participação abaixo de 80%, como no boletim.';
     document.getElementById('aba-nota').textContent = ({
       pp: 'Base: acerto na Prova Paulista dos três bimestres. É a série mais estável e comparável do ano.',
       sim: 'Base: acerto no Simulado SARESP de 19/10. Com 5 questões por componente, uma questão a mais ou a menos move o componente em 20 pontos de acerto: leia a direção, não a casa decimal.',
