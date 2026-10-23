@@ -34,9 +34,11 @@ As cinco provas **não são equivalentes**. A série da Prova Paulista é a úni
 
 ## Projeção SARESP 2026
 
-A pasta `projecao-saresp/` traz uma página à parte, no formato do boletim oficial: Nota Final, Nota Global, participação e as notas de LP, MAT, LI, GEO, HIS e CIE do 6º ao 9º ano, mais a projeção por turma. Publicada em `https://<usuário>.github.io/<repositório>/projecao-saresp/`.
+A pasta `projecao-saresp/` traz uma página à parte, no formato do boletim oficial: Nota Final por etapa, Nota Global, participação e as notas por componente do 6º ao 9º ano e da 1ª à 3ª série do EM, mais a projeção por turma. Publicada em `https://<usuário>.github.io/<repositório>/projecao-saresp/`.
 
 A conversão para a escala do SARESP usa as próprias coortes: o boletim 2025 das turmas que hoje estão no 7º, 8º e 9º comparado com o índice de acerto delas em 2026 (Prova Paulista dos três bimestres, pesos 20%, 30% e 50%). Os cenários conservador e otimista vêm do 1º e do 3º quartis dessa relação. A Nota Global usa peso 1,5 para LP e MAT, que reproduz as Notas Globais de 2025. A página só traz médias por ano e turma, sem nomes de estudantes.
+
+O Ensino Médio tem uma aba própria, projetada pela Prova Paulista do EM dos três bimestres (planilhas de exportação da rede, sem nomes de estudantes). A conversão usa as coortes 2ª 2026 ← 1ª 2025 e 3ª 2026 ← 2ª 2025, com fator por componente (média entre o do componente e o geral), e a Nota Global com peso 3 em LP e MAT, que reproduz as Notas Globais do EM em 2025. Na 3ª série, GEO, BIO, QUI e SOC não são aplicados na Prova Paulista e repetem a nota da coorte em 2025.
 
 Atenção: no Simulado do 9º ano, os percentuais de CIE, HIS, GEO e LI da tabela de estudantes deste painel estão contados em dobro. A projeção corrige dividindo por dois.
 
