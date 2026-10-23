@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Projeção das notas do SARESP 2026 dos Anos Finais, no formato do boletim, a partir do painel Trajetória da Aprendizagem.">
+<title>Projeção SARESP 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{color-scheme:light dark;
+  --plane:#f4f3ef;--raised:#ffffff;--sunken:#edece7;--ink:#0b0b0b;--ink-2:#52514e;--ink-3:#6e6c66;
+  --grid:#e1e0d9;--axis:#c3c2b7;--hair:rgba(11,11,11,.11);--lp:#2a78d6;
+  --good-ink:#006300;--crit-ink:#c0392b;--warn-ink:#a86a00;--shadow-2:0 2px 10px rgba(11,11,11,.07)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --plane:#0d0d0d;--raised:#1a1a19;--sunken:#232322;--ink:#ffffff;--ink-2:#c3c2b7;--ink-3:#a8a69c;
+  --grid:#2c2c2a;--axis:#403f3c;--hair:rgba(255,255,255,.13);--lp:#3987e5;
+  --good-ink:#2fbb2f;--crit-ink:#f08585;--warn-ink:#e3b14a;--shadow-2:0 2px 12px rgba(0,0,0,.5)}}
+:root[data-theme="dark"]{
+  --plane:#0d0d0d;--raised:#1a1a19;--sunken:#232322;--ink:#ffffff;--ink-2:#c3c2b7;--ink-3:#a8a69c;
+  --grid:#2c2c2a;--axis:#403f3c;--hair:rgba(255,255,255,.13);--lp:#3987e5;
+  --good-ink:#2fbb2f;--crit-ink:#f08585;--warn-ink:#e3b14a;--shadow-2:0 2px 12px rgba(0,0,0,.5)}
+:root{
+  --font-anthropic-sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-anthropic-serif:Archivo,system-ui,sans-serif;
+  --color-fg:var(--ink);--color-fg-muted:var(--ink-3);--color-bg:var(--plane);--color-panel:var(--raised);
+  --color-border-line:var(--hair);--color-ok:var(--good-ink);--color-warn:var(--warn-ink);--color-bad:var(--crit-ink);
+  --cds-font-size-caption:12px;--cds-font-size-body:14px;--cds-font-size-heading:16px;--cds-font-size-title:clamp(22px,3.6vw,30px);
+  --cds-font-weight-medium:600;
+  --cds-gap-xs:4px;--cds-gap-sm:8px;--cds-gap-md:14px;--cds-gap-lg:22px;--cds-gap-xl:32px;
+  --cds-pad-xs:4px;--cds-pad-sm:8px;--cds-pad-md:12px;--cds-pad-lg:18px;--cds-pad-xl:28px;--cds-radius:10px;
+  --cds-chart-grid:var(--grid);--cds-chart-axis:var(--axis);--cds-chart-reference:var(--ink-3);--cds-chart-muted:var(--ink-3);
+  --cds-surface-popover:var(--raised);--cds-border:var(--hair);--cds-shadow-popover:var(--shadow-2);--cds-text-secondary:var(--ink-3);
+  --cds-dur-slow:300ms;--cds-ease-out:cubic-bezier(.2,.7,.2,1)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--plane);color:var(--ink);font-family:var(--font-anthropic-sans);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.pg{max-width:1240px;margin:0 auto;padding:20px 16px 40px}
+.pg-nav{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:12px;margin-bottom:18px}
+.pg-nav a{color:var(--lp)}
+.pg-foot{margin-top:28px;font-size:12px;color:var(--ink-3)}
+.sp-title{font-weight:700;letter-spacing:-.015em}
+.sp-kpi-val{font-weight:600}
+.sp-seg button[aria-pressed=true]{background:var(--ink);color:var(--plane)}
+.dash-skeleton{color:transparent!important;background:var(--sunken);border-radius:6px;min-height:1em}
+:focus-visible{outline:2.5px solid var(--lp);outline-offset:2px;border-radius:4px}
+</style>
+<style>
+.sp{font-family:var(--font-anthropic-sans);color:var(--color-fg);display:flex;flex-direction:column;gap:var(--cds-gap-lg);max-width:76rem;margin-inline:auto}
+.sp-head{display:flex;flex-direction:column;gap:var(--cds-gap-xs)}
+.sp-eyebrow{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);letter-spacing:.02em}
+.sp-title{font-family:var(--font-anthropic-serif);font-weight:400;font-size:var(--cds-font-size-title);margin:0;line-height:1.15}
+.sp-take{font-size:var(--cds-font-size-body);color:var(--color-fg);margin:0;max-width:60rem}
+.sp-take.dash-skeleton{min-height:1.4em;width:60%}
+.sp-controls{display:flex;flex-wrap:wrap;gap:var(--cds-gap-md);align-items:center}
+.sp-ctl{display:flex;flex-direction:column;gap:var(--cds-gap-xs)}
+.sp-ctl-label{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted)}
+.sp-seg{display:inline-flex;border:1px solid var(--color-border-line);border-radius:var(--cds-radius);overflow:hidden}
+.sp-seg button{font:inherit;font-size:var(--cds-font-size-caption);background:transparent;color:var(--color-fg);border:0;padding:var(--cds-pad-xs) var(--cds-pad-md);cursor:pointer}
+.sp-seg button+button{border-left:1px solid var(--color-border-line)}
+.sp-seg button[aria-pressed=true]{background:var(--color-fg);color:var(--color-bg)}
+.sp-check{display:inline-flex;gap:var(--cds-gap-xs);align-items:center;font-size:var(--cds-font-size-caption);color:var(--color-fg)}
+.sp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,22rem),1fr));gap:var(--cds-gap-md)}
+.sp-card{background:var(--color-panel);border:1px solid var(--color-border-line);border-radius:var(--cds-radius);padding:var(--cds-pad-lg);display:flex;flex-direction:column;gap:var(--cds-gap-sm);min-width:0}
+.sp-card h2{font-size:var(--cds-font-size-heading);font-weight:var(--cds-font-weight-medium);margin:0}
+.sp-note{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);margin:0;line-height:1.45}
+.sp-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,13rem),1fr));gap:var(--cds-gap-md)}
+.sp-kpi{display:flex;flex-direction:column;gap:var(--cds-gap-xs)}
+.sp-kpi-lab{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted)}
+.sp-kpi-val{font-family:var(--font-anthropic-serif);font-weight:400;font-size:2.6rem;line-height:1;font-variant-numeric:tabular-nums}
+.sp-kpi-sub{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);font-variant-numeric:tabular-nums}
+.sp-kpi-val.dash-skeleton{min-height:2.6rem;width:5rem}
+.sp-wrap{overflow-x:auto}
+.sp-tab{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;font-size:var(--cds-font-size-body)}
+.sp-tab th,.sp-tab td{padding:var(--cds-pad-xs) var(--cds-pad-sm);border-bottom:1px solid var(--color-border-line);text-align:center;white-space:nowrap}
+.sp-tab th{font-size:var(--cds-font-size-caption);font-weight:var(--cds-font-weight-medium);color:var(--color-fg)}
+.sp-tab th:first-child,.sp-tab td:first-child{text-align:left}
+.sp-tab .sp-ng{background:color-mix(in srgb,var(--color-fg) 6%,transparent)}
+.sp-tab tbody tr.sp-proj td{font-weight:700}
+.sp-tab tbody tr.sp-proj td:first-child{font-weight:400}
+.sp-tab tbody tr.sp-of td{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);border-bottom-style:dashed}
+.sp-tab tbody tr.sp-of td.sp-ng{background:transparent}
+.sp-tab tbody tr.sp-sep td{border-top:1px solid var(--color-border-line)}
+.sp .sp-bad{color:var(--color-bad)}
+.sp .sp-warn{color:var(--color-warn)}
+.sp .sp-ok{color:var(--color-ok)}
+.sp-alert{color:var(--color-bad);margin-left:.2em}
+.sp-legend{display:flex;flex-wrap:wrap;gap:var(--cds-gap-md);font-size:var(--cds-font-size-caption);color:var(--color-fg-muted)}
+.sp-legend span b{font-weight:700}
+.sp-chart{position:relative;min-height:15rem}
+.sp-chart svg{display:block}
+.sp-tip{position:absolute;pointer-events:none;background:var(--cds-surface-popover);border:1px solid var(--cds-border);border-radius:var(--cds-radius);box-shadow:var(--cds-shadow-popover);padding:var(--cds-pad-xs) var(--cds-pad-sm);font-size:var(--cds-font-size-caption);line-height:1.5;white-space:nowrap;opacity:0}
+.sp-tip .sp-tip-h{color:var(--cds-text-secondary)}
+.sp-scroll{max-height:26rem;overflow:auto}
+.sp-scroll thead th{position:sticky;top:0;background:var(--color-panel)}
+.sp-method ol{margin:0;padding-left:1.2rem;display:flex;flex-direction:column;gap:var(--cds-gap-xs);font-size:var(--cds-font-size-body);line-height:1.5}
+.sp-method p{margin:0;font-size:var(--cds-font-size-body);line-height:1.5}
+.sp .sp-strong{font-weight:700}
+[data-dash-source-state=empty]{color:transparent}
+[data-dash-source-state=refreshing]{opacity:.5;transition:opacity var(--cds-dur-slow)}
+.sp-fail{display:flex;align-items:center;justify-content:center;gap:.4rem;font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);min-height:6rem}
+.sp-fail i{width:.375rem;height:.375rem;border-radius:50%;background:var(--color-bad);display:inline-block}
+@media (prefers-reduced-motion:no-preference){.sp-in{animation:spIn var(--cds-dur-slow) var(--cds-ease-out) both}@keyframes spIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}}
+</style>
+</head>
+<body>
+<div class="pg">
+<nav class="pg-nav"><a href="../">← Trajetória da Aprendizagem</a><span style="color:var(--ink-3)">PEI Santo Dias da Silva · 2026</span></nav>
+<div id="dash-root">
+<div class="sp">
+  <header class="sp-head" id="topo">
+    <span class="sp-eyebrow">041609 · Santo Dias da Silva · Escola de período integral com alta complexidade e média vulnerabilidade</span>
+    <h1 class="sp-title">Projeção SARESP 2026 · Anos Finais do EF</h1>
+    <p class="sp-take dash-skeleton" id="takeaway" data-source="nota_final projecao"></p>
+  </header>
+
+  <div class="sp-controls" id="controles">
+    <div class="sp-ctl"><span class="sp-ctl-label">Cenário</span>
+      <div class="sp-seg" id="seg-cenario" role="group" aria-label="Cenário">
+        <button type="button" data-v="conservador">Conservador</button>
+        <button type="button" data-v="provavel">Provável</button>
+        <button type="button" data-v="otimista">Otimista</button>
+      </div></div>
+    <div class="sp-ctl"><span class="sp-ctl-label">Base da projeção</span>
+      <div class="sp-seg" id="seg-base" role="group" aria-label="Base da projeção">
+        <button type="button" data-v="pp">Prova Paulista</button>
+        <button type="button" data-v="todas">As cinco medidas</button>
+      </div></div>
+    <div class="sp-ctl"><span class="sp-ctl-label">&nbsp;</span>
+      <label class="sp-check"><input type="checkbox" id="chk-2025"> Mostrar o boletim 2025 abaixo de cada ano</label></div>
+  </div>
+
+  <section class="sp-card" id="nota-final">
+    <h2>Nota Final dos Anos Finais</h2>
+    <p class="sp-note">Média das Notas Globais do 6º ao 9º ano, como no boletim. O intervalo vai do cenário conservador ao otimista.</p>
+    <div class="sp-kpis">
+      <div class="sp-kpi"><span class="sp-kpi-lab" id="lab-nf">Projeção 2026</span>
+        <span class="sp-kpi-val dash-skeleton" id="kpi-nf" data-source="nota_final" data-field="NF"></span>
+        <span class="sp-kpi-sub" id="kpi-nf-sub"></span></div>
+      <div class="sp-kpi"><span class="sp-kpi-lab">Boletim 2025</span>
+        <span class="sp-kpi-val dash-skeleton" id="kpi-nf25" data-source="saresp_2025" data-field="valor" data-where="ano=AF&amp;comp=NF"></span>
+        <span class="sp-kpi-sub">Nota Final oficial · SARESP 2025</span></div>
+      <div class="sp-kpi"><span class="sp-kpi-lab">Variação projetada</span>
+        <span class="sp-kpi-val dash-skeleton" id="kpi-delta" data-source="nota_final" data-field="delta"></span>
+        <span class="sp-kpi-sub">pontos na escala de 0 a 10</span></div>
+    </div>
+  </section>
+
+  <section class="sp-card" id="boletim">
+    <h2>Anos Finais do EF · boletim projetado</h2>
+    <p class="sp-note">Mesmas colunas do boletim oficial. Notas de 0 a 10; participação estimada pela presença no Simulado SARESP de 19/10. O ícone ⚠ marca participação abaixo de 80%, como no boletim.</p>
+    <div class="sp-legend"><span><b class="sp-bad">vermelho</b> baixo (até 4,0)</span><span><b class="sp-warn">amarelo</b> médio (acima de 4,0 até 6,0)</span><span><b class="sp-ok">verde</b> alto (acima de 6,0)</span></div>
+    <div class="sp-wrap">
+      <table class="sp-tab" id="tab-anos" data-source="projecao" data-row-key="chave">
+        <thead><tr><th data-field="rotulo">Anos Finais do EF</th><th class="sp-ng" data-field="NG">Nota Global</th><th data-field="PART">Participação</th><th data-field="LP">LP</th><th data-field="MAT">MAT</th><th data-field="ING">LI</th><th data-field="GEO">GEO</th><th data-field="HIS">HIS</th><th data-field="CIE">CIE</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="sp-grid">
+    <section class="sp-card" id="grafico-ng">
+      <h2>Nota Global: 2025 e projeção 2026</h2>
+      <p class="sp-note">Círculo vazado: boletim 2025. Ponto cheio: cenário escolhido. A barra cobre do conservador ao otimista.</p>
+      <div class="sp-chart" id="chart-ng" data-source="projecao"></div>
+    </section>
+    <section class="sp-card" id="lacunas">
+      <h2>O que separa cada componente do próximo patamar</h2>
+      <p class="sp-note">Pontos percentuais de acerto, no índice da projeção, que faltam para sair do baixo (chegar a 4,1) e para igualar a nota de 2025 do mesmo ano. Ordenado da nota mais baixa para a mais alta.</p>
+      <div class="sp-wrap sp-scroll">
+        <table class="sp-tab" id="tab-lac" data-source="lacunas" data-row-key="chave">
+          <thead><tr><th data-field="rotulo">Ano · componente</th><th data-field="nota">Projeção</th><th data-field="nota2025">2025</th><th data-field="pp_medio">Até 4,1</th><th data-field="pp_2025">Até 2025</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <section class="sp-card" id="turmas">
+    <h2>Projeção por turma</h2>
+    <p class="sp-note">Mesmo cálculo aplicado a cada turma. O SARESP não publica turma; use para ver quem puxa a nota do ano. Com 25 a 40 estudantes por turma, diferenças de até 0,3 ponto ficam dentro do ruído.</p>
+    <div class="sp-wrap">
+      <table class="sp-tab" id="tab-turmas" data-source="projecao" data-row-key="chave">
+        <thead><tr><th data-field="rotulo">Turma</th><th class="sp-ng" data-field="NG">Nota Global</th><th data-field="PART">Participação</th><th data-field="LP">LP</th><th data-field="MAT">MAT</th><th data-field="ING">LI</th><th data-field="GEO">GEO</th><th data-field="HIS">HIS</th><th data-field="CIE">CIE</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="sp-grid">
+    <section class="sp-card sp-method" id="metodo">
+      <h2>Como a projeção foi feita</h2>
+      <ol>
+        <li><span class="sp-strong">Índice 2026.</span> Para cada ano, turma e componente, média ponderada do percentual de acerto do painel Trajetória. Base Prova Paulista: 1º bim 20%, 2º bim 30%, 3º bim 50%. Base “as cinco medidas”: 1º bim 15%, 2º bim 20%, Diagnóstica 10% (só LP e MAT), 3º bim 35%, Simulado 20%.</li>
+        <li><span class="sp-strong">Conversão para a escala SARESP.</span> As turmas que hoje estão no 7º, 8º e 9º fizeram o SARESP 2025 no 6º, 7º e 8º. Comparando o boletim delas com o índice 2026, nos 18 pares de coorte e componente, a nota do SARESP (×10) equivaleu a <span class="sp-strong" id="k-txt" data-source="calibracao" data-field="k">—</span> vez o índice de acerto. Esse fator multiplica o índice de todos os anos, inclusive o 6º.</li>
+        <li><span class="sp-strong">Cenários.</span> Conservador e otimista usam o 1º e o 3º quartis das razões entre os 18 pares (fatores <span id="kc-txt" data-source="calibracao" data-field="k_cons">—</span> e <span id="ko-txt" data-source="calibracao" data-field="k_otim">—</span>).</li>
+        <li><span class="sp-strong">Nota Global.</span> Média dos seis componentes com peso 1,5 para LP e MAT. Esses pesos reproduzem as quatro Notas Globais do boletim 2025; a média simples erra o 8º e o 9º.</li>
+        <li><span class="sp-strong">Participação.</span> Presentes no Simulado sobre presentes mais ausentes registrados.</li>
+      </ol>
+      <p class="sp-note">Limites: o SARESP é equalizado e a projeção não; cada prova tem dificuldade própria. Trate os números como faixa provável, não como resultado. O ranking estadual e o da Diretoria dependem das outras escolas e não podem ser projetados. No arquivo do Trajetória, o Simulado do 9º ano registra CIE, HIS, GEO e LI em dobro (acertos acima de 100%); aqui esses valores foram divididos por dois, o que bate com o acerto questão a questão.</p>
+    </section>
+    <section class="sp-card" id="coortes">
+      <h2>Calibração por coorte</h2>
+      <p class="sp-note">Nota do SARESP 2025 de cada coorte ao lado do índice 2026 das mesmas turmas. Razão = nota × 10 ÷ índice.</p>
+      <div class="sp-wrap sp-scroll">
+        <table class="sp-tab" id="tab-coortes" data-source="coortes" data-row-key="chave">
+          <thead><tr><th data-field="coorte">Coorte</th><th data-field="compNome">Comp.</th><th data-field="saresp2025">SARESP 2025</th><th data-field="indice2026">Índice 2026</th><th data-field="razao">Razão</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</div>
+</div>
+<footer class="pg-foot">Prof Christian Duarte · Coordenação Pedagógica · Projeção gerada em 23/10/2026 a partir do Trajetória da Aprendizagem e do boletim SARESP 2025. Estimativa, não resultado oficial.</footer>
+</div>
+<script type="application/json" id="dados-proj">{"medidas_2026": [{"nivel": "ano", "escopo": "6", "ano": "6", "medida": "pp1", "comp": "LP", "pct": 59.54, "n": 105}, {"nivel": "ano", "escopo": "6", "ano": "6", "medida": "pp1", "comp": "MAT", "pct": 53.46, "n": 107}, {"nivel": "ano", "escopo": "6", "ano": "6", "medida": "pp1", "comp": "ING", "pct": 76.07, "n": 107}, {"nivel": "ano", "escopo": "6", "ano": "6", "medida": "pp1", "comp": "GEO", "pct": 48.19, "n": 105}, {"nivel": "ano", "escopo": "6", "ano": "6", "medida": "pp1", "comp": "HIS", "pct": 55.62, "n": 105}, {"nivel": "ano", "escopo": "6", "ano": "6", "medida": "pp1", "comp": "CIE", "pct": 40.99, "n": 107}, {"nivel": "ano", "escopo": "6", "ano": "6", "medida": "pp2", "comp": "LP", "pct": 54.53, "n": 106}, {"nivel": "ano", "escopo": "6", "ano": "6", "medida": "pp2", "comp": "MAT", "pct": 30.82, "n": 98}, {"nivel": "ano", "escopo": "6", "ano": "6", "medida": "pp2", "comp": "ING", "pct": 62.24, "n": 98}, {"nivel": "ano", "escopo": "6", "ano": "6", "medida": "pp2", "comp": "GEO", "pct": 36.7, "n": 106}, {"nivel": "ano", "escopo": "6", "ano": "6", "medida": "pp2", "comp": "HIS", "pct": 50.47, "n": 106}, {"nivel": "ano", "escopo": "6", "ano": "6", "medida": "pp2", "comp": "CIE", "pct": 39.99, "n": 98}, {"nivel": "ano", "escopo": "6", "ano": "6", "medida": "oe", "comp": "LP", "pct": 63.78, "n": 94}, {"nivel": "ano", "escopo": "6", "ano": "6", "medida": "oe", "comp": "MAT", "pct": 67.95, "n": 94}, {"nivel": "ano", "escopo": "6", "ano": "6", "medida": "pp3", "comp": "LP", "pct": 67.33, "n": 101}, {"nivel": "ano", "escopo": "6", "ano": "6", "medida": "pp3", "comp": "MAT", "pct": 49.47, "n": 103}, {"nivel": "ano", "escopo": "6", "ano": "6", "medida": "pp3", "comp": "ING", "pct": 56.12, "n": 103}, {"nivel": "ano", "escopo": "6", "ano": "6", "medida": "pp3", "comp": "GEO", "pct": 53.73, "n": 102}, {"nivel": "ano", "escopo": "6", "ano": "6", "medida": "pp3", "comp": "HIS", "pct": 53.24, "n": 102}, {"nivel": "ano", "escopo": "6", "ano": "6", "medida": "pp3", "comp": "CIE", "pct": 45.37, "n": 103}, {"nivel": "ano", "escopo": "6", "ano": "6", "medida": "sim", "comp": "LP", "pct": 93.64, "n": 88}, {"nivel": "ano", "escopo": "6", "ano": "6", "medida": "sim", "comp": "MAT", "pct": 60.68, "n": 88}, {"nivel": "ano", "escopo": "6", "ano": "6", "medida": "sim", "comp": "ING", "pct": 68.64, "n": 88}, {"nivel": "ano", "escopo": "6", "ano": "6", "medida": "sim", "comp": "GEO", "pct": 45.68, "n": 88}, {"nivel": "ano", "escopo": "6", "ano": "6", "medida": "sim", "comp": "HIS", "pct": 62.05, "n": 88}, {"nivel": "ano", "escopo": "6", "ano": "6", "medida": "sim", "comp": "CIE", "pct": 56.82, "n": 88}, {"nivel": "ano", "escopo": "7", "ano": "7", "medida": "pp1", "comp": "LP", "pct": 45.6, "n": 98}, {"nivel": "ano", "escopo": "7", "ano": "7", "medida": "pp1", "comp": "MAT", "pct": 42.29, "n": 96}, {"nivel": "ano", "escopo": "7", "ano": "7", "medida": "pp1", "comp": "ING", "pct": 63.54, "n": 96}, {"nivel": "ano", "escopo": "7", "ano": "7", "medida": "pp1", "comp": "GEO", "pct": 44.69, "n": 98}, {"nivel": "ano", "escopo": "7", "ano": "7", "medida": "pp1", "comp": "HIS", "pct": 45.2, "n": 98}, {"nivel": "ano", "escopo": "7", "ano": "7", "medida": "pp1", "comp": "CIE", "pct": 55.44, "n": 96}, {"nivel": "ano", "escopo": "7", "ano": "7", "medida": "pp2", "comp": "LP", "pct": 52.38, "n": 101}, {"nivel": "ano", "escopo": "7", "ano": "7", "medida": "pp2", "comp": "MAT", "pct": 49.44, "n": 101}, {"nivel": "ano", "escopo": "7", "ano": "7", "medida": "pp2", "comp": "ING", "pct": 47.33, "n": 101}, {"nivel": "ano", "escopo": "7", "ano": "7", "medida": "pp2", "comp": "GEO", "pct": 45.45, "n": 101}, {"nivel": "ano", "escopo": "7", "ano": "7", "medida": "pp2", "comp": "HIS", "pct": 57.13, "n": 101}, {"nivel": "ano", "escopo": "7", "ano": "7", "medida": "pp2", "comp": "CIE", "pct": 55.05, "n": 101}, {"nivel": "ano", "escopo": "7", "ano": "7", "medida": "oe", "comp": "LP", "pct": 68.42, "n": 95}, {"nivel": "ano", "escopo": "7", "ano": "7", "medida": "oe", "comp": "MAT", "pct": 68.38, "n": 95}, {"nivel": "ano", "escopo": "7", "ano": "7", "medida": "pp3", "comp": "LP", "pct": 55.29, "n": 102}, {"nivel": "ano", "escopo": "7", "ano": "7", "medida": "pp3", "comp": "MAT", "pct": 51.13, "n": 103}, {"nivel": "ano", "escopo": "7", "ano": "7", "medida": "pp3", "comp": "ING", "pct": 44.27, "n": 103}, {"nivel": "ano", "escopo": "7", "ano": "7", "medida": "pp3", "comp": "GEO", "pct": 51.27, "n": 102}, {"nivel": "ano", "escopo": "7", "ano": "7", "medida": "pp3", "comp": "HIS", "pct": 46.18, "n": 102}, {"nivel": "ano", "escopo": "7", "ano": "7", "medida": "pp3", "comp": "CIE", "pct": 53.98, "n": 103}, {"nivel": "ano", "escopo": "7", "ano": "7", "medida": "sim", "comp": "LP", "pct": 85.31, "n": 98}, {"nivel": "ano", "escopo": "7", "ano": "7", "medida": "sim", "comp": "MAT", "pct": 61.22, "n": 98}, {"nivel": "ano", "escopo": "7", "ano": "7", "medida": "sim", "comp": "ING", "pct": 76.73, "n": 98}, {"nivel": "ano", "escopo": "7", "ano": "7", "medida": "sim", "comp": "GEO", "pct": 47.55, "n": 98}, {"nivel": "ano", "escopo": "7", "ano": "7", "medida": "sim", "comp": "HIS", "pct": 60.82, "n": 98}, {"nivel": "ano", "escopo": "7", "ano": "7", "medida": "sim", "comp": "CIE", "pct": 67.76, "n": 98}, {"nivel": "ano", "escopo": "8", "ano": "8", "medida": "pp1", "comp": "LP", "pct": 54.38, "n": 120}, {"nivel": "ano", "escopo": "8", "ano": "8", "medida": "pp1", "comp": "MAT", "pct": 27.56, "n": 119}, {"nivel": "ano", "escopo": "8", "ano": "8", "medida": "pp1", "comp": "ING", "pct": 55.46, "n": 119}, {"nivel": "ano", "escopo": "8", "ano": "8", "medida": "pp1", "comp": "GEO", "pct": 54.33, "n": 120}, {"nivel": "ano", "escopo": "8", "ano": "8", "medida": "pp1", "comp": "HIS", "pct": 38.67, "n": 120}, {"nivel": "ano", "escopo": "8", "ano": "8", "medida": "pp1", "comp": "CIE", "pct": 64.45, "n": 119}, {"nivel": "ano", "escopo": "8", "ano": "8", "medida": "pp2", "comp": "LP", "pct": 54.43, "n": 122}, {"nivel": "ano", "escopo": "8", "ano": "8", "medida": "pp2", "comp": "MAT", "pct": 43.28, "n": 120}, {"nivel": "ano", "escopo": "8", "ano": "8", "medida": "pp2", "comp": "ING", "pct": 57.17, "n": 120}, {"nivel": "ano", "escopo": "8", "ano": "8", "medida": "pp2", "comp": "GEO", "pct": 45.41, "n": 122}, {"nivel": "ano", "escopo": "8", "ano": "8", "medida": "pp2", "comp": "HIS", "pct": 41.97, "n": 122}, {"nivel": "ano", "escopo": "8", "ano": "8", "medida": "pp2", "comp": "CIE", "pct": 51.92, "n": 120}, {"nivel": "ano", "escopo": "8", "ano": "8", "medida": "oe", "comp": "LP", "pct": 49.48, "n": 105}, {"nivel": "ano", "escopo": "8", "ano": "8", "medida": "oe", "comp": "MAT", "pct": 51.43, "n": 105}, {"nivel": "ano", "escopo": "8", "ano": "8", "medida": "pp3", "comp": "LP", "pct": 62.96, "n": 115}, {"nivel": "ano", "escopo": "8", "ano": "8", "medida": "pp3", "comp": "MAT", "pct": 45.3, "n": 112}, {"nivel": "ano", "escopo": "8", "ano": "8", "medida": "pp3", "comp": "ING", "pct": 59.46, "n": 112}, {"nivel": "ano", "escopo": "8", "ano": "8", "medida": "pp3", "comp": "GEO", "pct": 53.48, "n": 115}, {"nivel": "ano", "escopo": "8", "ano": "8", "medida": "pp3", "comp": "HIS", "pct": 49.48, "n": 115}, {"nivel": "ano", "escopo": "8", "ano": "8", "medida": "pp3", "comp": "CIE", "pct": 56.96, "n": 112}, {"nivel": "ano", "escopo": "8", "ano": "8", "medida": "sim", "comp": "LP", "pct": 80.0, "n": 106}, {"nivel": "ano", "escopo": "8", "ano": "8", "medida": "sim", "comp": "MAT", "pct": 52.83, "n": 106}, {"nivel": "ano", "escopo": "8", "ano": "8", "medida": "sim", "comp": "ING", "pct": 75.85, "n": 106}, {"nivel": "ano", "escopo": "8", "ano": "8", "medida": "sim", "comp": "GEO", "pct": 71.7, "n": 106}, {"nivel": "ano", "escopo": "8", "ano": "8", "medida": "sim", "comp": "HIS", "pct": 67.74, "n": 106}, {"nivel": "ano", "escopo": "8", "ano": "8", "medida": "sim", "comp": "CIE", "pct": 82.08, "n": 106}, {"nivel": "ano", "escopo": "9", "ano": "9", "medida": "pp1", "comp": "LP", "pct": 58.47, "n": 95}, {"nivel": "ano", "escopo": "9", "ano": "9", "medida": "pp1", "comp": "MAT", "pct": 29.18, "n": 97}, {"nivel": "ano", "escopo": "9", "ano": "9", "medida": "pp1", "comp": "ING", "pct": 61.44, "n": 97}, {"nivel": "ano", "escopo": "9", "ano": "9", "medida": "pp1", "comp": "GEO", "pct": 53.58, "n": 95}, {"nivel": "ano", "escopo": "9", "ano": "9", "medida": "pp1", "comp": "HIS", "pct": 53.68, "n": 95}, {"nivel": "ano", "escopo": "9", "ano": "9", "medida": "pp1", "comp": "CIE", "pct": 34.23, "n": 97}, {"nivel": "ano", "escopo": "9", "ano": "9", "medida": "pp2", "comp": "LP", "pct": 53.9, "n": 100}, {"nivel": "ano", "escopo": "9", "ano": "9", "medida": "pp2", "comp": "MAT", "pct": 40.2, "n": 99}, {"nivel": "ano", "escopo": "9", "ano": "9", "medida": "pp2", "comp": "ING", "pct": 49.09, "n": 99}, {"nivel": "ano", "escopo": "9", "ano": "9", "medida": "pp2", "comp": "GEO", "pct": 53.7, "n": 100}, {"nivel": "ano", "escopo": "9", "ano": "9", "medida": "pp2", "comp": "HIS", "pct": 37.8, "n": 100}, {"nivel": "ano", "escopo": "9", "ano": "9", "medida": "pp2", "comp": "CIE", "pct": 35.56, "n": 99}, {"nivel": "ano", "escopo": "9", "ano": "9", "medida": "oe", "comp": "LP", "pct": 51.12, "n": 79}, {"nivel": "ano", "escopo": "9", "ano": "9", "medida": "oe", "comp": "MAT", "pct": 48.73, "n": 79}, {"nivel": "ano", "escopo": "9", "ano": "9", "medida": "pp3", "comp": "LP", "pct": 65.11, "n": 91}, {"nivel": "ano", "escopo": "9", "ano": "9", "medida": "pp3", "comp": "MAT", "pct": 46.14, "n": 88}, {"nivel": "ano", "escopo": "9", "ano": "9", "medida": "pp3", "comp": "ING", "pct": 52.73, "n": 88}, {"nivel": "ano", "escopo": "9", "ano": "9", "medida": "pp3", "comp": "GEO", "pct": 44.84, "n": 91}, {"nivel": "ano", "escopo": "9", "ano": "9", "medida": "pp3", "comp": "HIS", "pct": 50.66, "n": 91}, {"nivel": "ano", "escopo": "9", "ano": "9", "medida": "pp3", "comp": "CIE", "pct": 39.7, "n": 88}, {"nivel": "ano", "escopo": "9", "ano": "9", "medida": "sim", "comp": "LP", "pct": 81.45, "n": 83}, {"nivel": "ano", "escopo": "9", "ano": "9", "medida": "sim", "comp": "MAT", "pct": 44.94, "n": 83}, {"nivel": "ano", "escopo": "9", "ano": "9", "medida": "sim", "comp": "ING", "pct": 60.24, "n": 83}, {"nivel": "ano", "escopo": "9", "ano": "9", "medida": "sim", "comp": "GEO", "pct": 66.75, "n": 83}, {"nivel": "ano", "escopo": "9", "ano": "9", "medida": "sim", "comp": "HIS", "pct": 70.36, "n": 83}, {"nivel": "ano", "escopo": "9", "ano": "9", "medida": "sim", "comp": "CIE", "pct": 57.35, "n": 83}, {"nivel": "turma", "escopo": "6ºA", "ano": "6", "medida": "pp1", "comp": "LP", "pct": 60.81, "n": 37}, {"nivel": "turma", "escopo": "6ºA", "ano": "6", "medida": "pp1", "comp": "MAT", "pct": 59.58, "n": 36}, {"nivel": "turma", "escopo": "6ºA", "ano": "6", "medida": "pp1", "comp": "ING", "pct": 78.33, "n": 36}, {"nivel": "turma", "escopo": "6ºA", "ano": "6", "medida": "pp1", "comp": "GEO", "pct": 51.62, "n": 37}, {"nivel": "turma", "escopo": "6ºA", "ano": "6", "medida": "pp1", "comp": "HIS", "pct": 53.51, "n": 37}, {"nivel": "turma", "escopo": "6ºA", "ano": "6", "medida": "pp1", "comp": "CIE", "pct": 40.18, "n": 36}, {"nivel": "turma", "escopo": "6ºA", "ano": "6", "medida": "pp2", "comp": "LP", "pct": 54.46, "n": 37}, {"nivel": "turma", "escopo": "6ºA", "ano": "6", "medida": "pp2", "comp": "MAT", "pct": 33.38, "n": 34}, {"nivel": "turma", "escopo": "6ºA", "ano": "6", "medida": "pp2", "comp": "ING", "pct": 61.76, "n": 34}, {"nivel": "turma", "escopo": "6ºA", "ano": "6", "medida": "pp2", "comp": "GEO", "pct": 37.57, "n": 37}, {"nivel": "turma", "escopo": "6ºA", "ano": "6", "medida": "pp2", "comp": "HIS", "pct": 47.3, "n": 37}, {"nivel": "turma", "escopo": "6ºA", "ano": "6", "medida": "pp2", "comp": "CIE", "pct": 41.57, "n": 34}, {"nivel": "turma", "escopo": "6ºA", "ano": "6", "medida": "oe", "comp": "LP", "pct": 64.05, "n": 33}, {"nivel": "turma", "escopo": "6ºA", "ano": "6", "medida": "oe", "comp": "MAT", "pct": 69.98, "n": 33}, {"nivel": "turma", "escopo": "6ºA", "ano": "6", "medida": "pp3", "comp": "LP", "pct": 65.14, "n": 37}, {"nivel": "turma", "escopo": "6ºA", "ano": "6", "medida": "pp3", "comp": "MAT", "pct": 52.7, "n": 37}, {"nivel": "turma", "escopo": "6ºA", "ano": "6", "medida": "pp3", "comp": "ING", "pct": 52.43, "n": 37}, {"nivel": "turma", "escopo": "6ºA", "ano": "6", "medida": "pp3", "comp": "GEO", "pct": 56.22, "n": 37}, {"nivel": "turma", "escopo": "6ºA", "ano": "6", "medida": "pp3", "comp": "HIS", "pct": 46.22, "n": 37}, {"nivel": "turma", "escopo": "6ºA", "ano": "6", "medida": "pp3", "comp": "CIE", "pct": 31.72, "n": 37}, {"nivel": "turma", "escopo": "6ºA", "ano": "6", "medida": "sim", "comp": "LP", "pct": 93.55, "n": 31}, {"nivel": "turma", "escopo": "6ºA", "ano": "6", "medida": "sim", "comp": "MAT", "pct": 65.81, "n": 31}, {"nivel": "turma", "escopo": "6ºA", "ano": "6", "medida": "sim", "comp": "ING", "pct": 67.74, "n": 31}, {"nivel": "turma", "escopo": "6ºA", "ano": "6", "medida": "sim", "comp": "GEO", "pct": 43.87, "n": 31}, {"nivel": "turma", "escopo": "6ºA", "ano": "6", "medida": "sim", "comp": "HIS", "pct": 66.45, "n": 31}, {"nivel": "turma", "escopo": "6ºA", "ano": "6", "medida": "sim", "comp": "CIE", "pct": 58.06, "n": 31}, {"nivel": "turma", "escopo": "6ºB", "ano": "6", "medida": "pp1", "comp": "LP", "pct": 59.46, "n": 34}, {"nivel": "turma", "escopo": "6ºB", "ano": "6", "medida": "pp1", "comp": "MAT", "pct": 55.28, "n": 36}, {"nivel": "turma", "escopo": "6ºB", "ano": "6", "medida": "pp1", "comp": "ING", "pct": 72.78, "n": 36}, {"nivel": "turma", "escopo": "6ºB", "ano": "6", "medida": "pp1", "comp": "GEO", "pct": 50.0, "n": 34}, {"nivel": "turma", "escopo": "6ºB", "ano": "6", "medida": "pp1", "comp": "HIS", "pct": 58.53, "n": 34}, {"nivel": "turma", "escopo": "6ºB", "ano": "6", "medida": "pp1", "comp": "CIE", "pct": 46.11, "n": 36}, {"nivel": "turma", "escopo": "6ºB", "ano": "6", "medida": "pp2", "comp": "LP", "pct": 56.0, "n": 35}, {"nivel": "turma", "escopo": "6ºB", "ano": "6", "medida": "pp2", "comp": "MAT", "pct": 33.75, "n": 32}, {"nivel": "turma", "escopo": "6ºB", "ano": "6", "medida": "pp2", "comp": "ING", "pct": 62.5, "n": 32}, {"nivel": "turma", "escopo": "6ºB", "ano": "6", "medida": "pp2", "comp": "GEO", "pct": 35.14, "n": 35}, {"nivel": "turma", "escopo": "6ºB", "ano": "6", "medida": "pp2", "comp": "HIS", "pct": 56.29, "n": 35}, {"nivel": "turma", "escopo": "6ºB", "ano": "6", "medida": "pp2", "comp": "CIE", "pct": 41.23, "n": 32}, {"nivel": "turma", "escopo": "6ºB", "ano": "6", "medida": "oe", "comp": "LP", "pct": 66.67, "n": 33}, {"nivel": "turma", "escopo": "6ºB", "ano": "6", "medida": "oe", "comp": "MAT", "pct": 69.85, "n": 33}, {"nivel": "turma", "escopo": "6ºB", "ano": "6", "medida": "pp3", "comp": "LP", "pct": 71.36, "n": 33}, {"nivel": "turma", "escopo": "6ºB", "ano": "6", "medida": "pp3", "comp": "MAT", "pct": 50.15, "n": 34}, {"nivel": "turma", "escopo": "6ºB", "ano": "6", "medida": "pp3", "comp": "ING", "pct": 54.71, "n": 34}, {"nivel": "turma", "escopo": "6ºB", "ano": "6", "medida": "pp3", "comp": "GEO", "pct": 51.18, "n": 34}, {"nivel": "turma", "escopo": "6ºB", "ano": "6", "medida": "pp3", "comp": "HIS", "pct": 47.06, "n": 34}, {"nivel": "turma", "escopo": "6ºB", "ano": "6", "medida": "pp3", "comp": "CIE", "pct": 36.27, "n": 34}, {"nivel": "turma", "escopo": "6ºB", "ano": "6", "medida": "sim", "comp": "LP", "pct": 92.67, "n": 30}, {"nivel": "turma", "escopo": "6ºB", "ano": "6", "medida": "sim", "comp": "MAT", "pct": 58.0, "n": 30}, {"nivel": "turma", "escopo": "6ºB", "ano": "6", "medida": "sim", "comp": "ING", "pct": 69.33, "n": 30}, {"nivel": "turma", "escopo": "6ºB", "ano": "6", "medida": "sim", "comp": "GEO", "pct": 46.67, "n": 30}, {"nivel": "turma", "escopo": "6ºB", "ano": "6", "medida": "sim", "comp": "HIS", "pct": 63.33, "n": 30}, {"nivel": "turma", "escopo": "6ºB", "ano": "6", "medida": "sim", "comp": "CIE", "pct": 58.67, "n": 30}, {"nivel": "turma", "escopo": "6ºC", "ano": "6", "medida": "pp1", "comp": "LP", "pct": 58.24, "n": 34}, {"nivel": "turma", "escopo": "6ºC", "ano": "6", "medida": "pp1", "comp": "MAT", "pct": 45.29, "n": 35}, {"nivel": "turma", "escopo": "6ºC", "ano": "6", "medida": "pp1", "comp": "ING", "pct": 77.14, "n": 35}, {"nivel": "turma", "escopo": "6ºC", "ano": "6", "medida": "pp1", "comp": "GEO", "pct": 42.65, "n": 34}, {"nivel": "turma", "escopo": "6ºC", "ano": "6", "medida": "pp1", "comp": "HIS", "pct": 55.0, "n": 34}, {"nivel": "turma", "escopo": "6ºC", "ano": "6", "medida": "pp1", "comp": "CIE", "pct": 36.57, "n": 35}, {"nivel": "turma", "escopo": "6ºC", "ano": "6", "medida": "pp2", "comp": "LP", "pct": 53.09, "n": 34}, {"nivel": "turma", "escopo": "6ºC", "ano": "6", "medida": "pp2", "comp": "MAT", "pct": 25.16, "n": 32}, {"nivel": "turma", "escopo": "6ºC", "ano": "6", "medida": "pp2", "comp": "ING", "pct": 62.5, "n": 32}, {"nivel": "turma", "escopo": "6ºC", "ano": "6", "medida": "pp2", "comp": "GEO", "pct": 37.35, "n": 34}, {"nivel": "turma", "escopo": "6ºC", "ano": "6", "medida": "pp2", "comp": "HIS", "pct": 47.94, "n": 34}, {"nivel": "turma", "escopo": "6ºC", "ano": "6", "medida": "pp2", "comp": "CIE", "pct": 37.07, "n": 32}, {"nivel": "turma", "escopo": "6ºC", "ano": "6", "medida": "oe", "comp": "LP", "pct": 60.07, "n": 28}, {"nivel": "turma", "escopo": "6ºC", "ano": "6", "medida": "oe", "comp": "MAT", "pct": 63.31, "n": 28}, {"nivel": "turma", "escopo": "6ºC", "ano": "6", "medida": "pp3", "comp": "LP", "pct": 65.65, "n": 31}, {"nivel": "turma", "escopo": "6ºC", "ano": "6", "medida": "pp3", "comp": "MAT", "pct": 45.0, "n": 32}, {"nivel": "turma", "escopo": "6ºC", "ano": "6", "medida": "pp3", "comp": "ING", "pct": 61.88, "n": 32}, {"nivel": "turma", "escopo": "6ºC", "ano": "6", "medida": "pp3", "comp": "GEO", "pct": 53.55, "n": 31}, {"nivel": "turma", "escopo": "6ºC", "ano": "6", "medida": "pp3", "comp": "HIS", "pct": 68.39, "n": 31}, {"nivel": "turma", "escopo": "6ºC", "ano": "6", "medida": "pp3", "comp": "CIE", "pct": 70.83, "n": 32}, {"nivel": "turma", "escopo": "6ºC", "ano": "6", "medida": "sim", "comp": "LP", "pct": 94.81, "n": 27}, {"nivel": "turma", "escopo": "6ºC", "ano": "6", "medida": "sim", "comp": "MAT", "pct": 57.78, "n": 27}, {"nivel": "turma", "escopo": "6ºC", "ano": "6", "medida": "sim", "comp": "ING", "pct": 68.89, "n": 27}, {"nivel": "turma", "escopo": "6ºC", "ano": "6", "medida": "sim", "comp": "GEO", "pct": 46.67, "n": 27}, {"nivel": "turma", "escopo": "6ºC", "ano": "6", "medida": "sim", "comp": "HIS", "pct": 55.56, "n": 27}, {"nivel": "turma", "escopo": "6ºC", "ano": "6", "medida": "sim", "comp": "CIE", "pct": 53.33, "n": 27}, {"nivel": "turma", "escopo": "7ºA", "ano": "7", "medida": "pp1", "comp": "LP", "pct": 57.86, "n": 35}, {"nivel": "turma", "escopo": "7ºA", "ano": "7", "medida": "pp1", "comp": "MAT", "pct": 50.59, "n": 34}, {"nivel": "turma", "escopo": "7ºA", "ano": "7", "medida": "pp1", "comp": "ING", "pct": 78.82, "n": 34}, {"nivel": "turma", "escopo": "7ºA", "ano": "7", "medida": "pp1", "comp": "GEO", "pct": 58.29, "n": 35}, {"nivel": "turma", "escopo": "7ºA", "ano": "7", "medida": "pp1", "comp": "HIS", "pct": 62.57, "n": 35}, {"nivel": "turma", "escopo": "7ºA", "ano": "7", "medida": "pp1", "comp": "CIE", "pct": 67.34, "n": 34}, {"nivel": "turma", "escopo": "7ºA", "ano": "7", "medida": "pp2", "comp": "LP", "pct": 70.0, "n": 33}, {"nivel": "turma", "escopo": "7ºA", "ano": "7", "medida": "pp2", "comp": "MAT", "pct": 55.55, "n": 33}, {"nivel": "turma", "escopo": "7ºA", "ano": "7", "medida": "pp2", "comp": "ING", "pct": 66.67, "n": 33}, {"nivel": "turma", "escopo": "7ºA", "ano": "7", "medida": "pp2", "comp": "GEO", "pct": 57.27, "n": 33}, {"nivel": "turma", "escopo": "7ºA", "ano": "7", "medida": "pp2", "comp": "HIS", "pct": 67.88, "n": 33}, {"nivel": "turma", "escopo": "7ºA", "ano": "7", "medida": "pp2", "comp": "CIE", "pct": 63.33, "n": 33}, {"nivel": "turma", "escopo": "7ºA", "ano": "7", "medida": "oe", "comp": "LP", "pct": 82.73, "n": 35}, {"nivel": "turma", "escopo": "7ºA", "ano": "7", "medida": "oe", "comp": "MAT", "pct": 78.19, "n": 35}, {"nivel": "turma", "escopo": "7ºA", "ano": "7", "medida": "pp3", "comp": "LP", "pct": 68.68, "n": 34}, {"nivel": "turma", "escopo": "7ºA", "ano": "7", "medida": "pp3", "comp": "MAT", "pct": 55.1, "n": 34}, {"nivel": "turma", "escopo": "7ºA", "ano": "7", "medida": "pp3", "comp": "ING", "pct": 62.94, "n": 34}, {"nivel": "turma", "escopo": "7ºA", "ano": "7", "medida": "pp3", "comp": "GEO", "pct": 65.59, "n": 34}, {"nivel": "turma", "escopo": "7ºA", "ano": "7", "medida": "pp3", "comp": "HIS", "pct": 57.65, "n": 34}, {"nivel": "turma", "escopo": "7ºA", "ano": "7", "medida": "pp3", "comp": "CIE", "pct": 66.76, "n": 34}, {"nivel": "turma", "escopo": "7ºA", "ano": "7", "medida": "sim", "comp": "LP", "pct": 92.22, "n": 36}, {"nivel": "turma", "escopo": "7ºA", "ano": "7", "medida": "sim", "comp": "MAT", "pct": 71.11, "n": 36}, {"nivel": "turma", "escopo": "7ºA", "ano": "7", "medida": "sim", "comp": "ING", "pct": 85.56, "n": 36}, {"nivel": "turma", "escopo": "7ºA", "ano": "7", "medida": "sim", "comp": "GEO", "pct": 60.0, "n": 36}, {"nivel": "turma", "escopo": "7ºA", "ano": "7", "medida": "sim", "comp": "HIS", "pct": 76.11, "n": 36}, {"nivel": "turma", "escopo": "7ºA", "ano": "7", "medida": "sim", "comp": "CIE", "pct": 73.89, "n": 36}, {"nivel": "turma", "escopo": "7ºB", "ano": "7", "medida": "pp1", "comp": "LP", "pct": 33.14, "n": 33}, {"nivel": "turma", "escopo": "7ºB", "ano": "7", "medida": "pp1", "comp": "MAT", "pct": 30.42, "n": 32}, {"nivel": "turma", "escopo": "7ºB", "ano": "7", "medida": "pp1", "comp": "ING", "pct": 53.12, "n": 32}, {"nivel": "turma", "escopo": "7ºB", "ano": "7", "medida": "pp1", "comp": "GEO", "pct": 28.79, "n": 33}, {"nivel": "turma", "escopo": "7ºB", "ano": "7", "medida": "pp1", "comp": "HIS", "pct": 30.91, "n": 33}, {"nivel": "turma", "escopo": "7ºB", "ano": "7", "medida": "pp1", "comp": "CIE", "pct": 45.13, "n": 32}, {"nivel": "turma", "escopo": "7ºB", "ano": "7", "medida": "pp2", "comp": "LP", "pct": 38.43, "n": 35}, {"nivel": "turma", "escopo": "7ºB", "ano": "7", "medida": "pp2", "comp": "MAT", "pct": 36.95, "n": 35}, {"nivel": "turma", "escopo": "7ºB", "ano": "7", "medida": "pp2", "comp": "ING", "pct": 32.57, "n": 35}, {"nivel": "turma", "escopo": "7ºB", "ano": "7", "medida": "pp2", "comp": "GEO", "pct": 34.57, "n": 35}, {"nivel": "turma", "escopo": "7ºB", "ano": "7", "medida": "pp2", "comp": "HIS", "pct": 49.43, "n": 35}, {"nivel": "turma", "escopo": "7ºB", "ano": "7", "medida": "pp2", "comp": "CIE", "pct": 44.0, "n": 35}, {"nivel": "turma", "escopo": "7ºB", "ano": "7", "medida": "oe", "comp": "LP", "pct": 49.52, "n": 28}, {"nivel": "turma", "escopo": "7ºB", "ano": "7", "medida": "oe", "comp": "MAT", "pct": 52.6, "n": 28}, {"nivel": "turma", "escopo": "7ºB", "ano": "7", "medida": "pp3", "comp": "LP", "pct": 38.18, "n": 33}, {"nivel": "turma", "escopo": "7ºB", "ano": "7", "medida": "pp3", "comp": "MAT", "pct": 36.27, "n": 34}, {"nivel": "turma", "escopo": "7ºB", "ano": "7", "medida": "pp3", "comp": "ING", "pct": 31.76, "n": 34}, {"nivel": "turma", "escopo": "7ºB", "ano": "7", "medida": "pp3", "comp": "GEO", "pct": 35.15, "n": 33}, {"nivel": "turma", "escopo": "7ºB", "ano": "7", "medida": "pp3", "comp": "HIS", "pct": 34.55, "n": 33}, {"nivel": "turma", "escopo": "7ºB", "ano": "7", "medida": "pp3", "comp": "CIE", "pct": 43.24, "n": 34}, {"nivel": "turma", "escopo": "7ºB", "ano": "7", "medida": "sim", "comp": "LP", "pct": 77.65, "n": 34}, {"nivel": "turma", "escopo": "7ºB", "ano": "7", "medida": "sim", "comp": "MAT", "pct": 44.71, "n": 34}, {"nivel": "turma", "escopo": "7ºB", "ano": "7", "medida": "sim", "comp": "ING", "pct": 64.71, "n": 34}, {"nivel": "turma", "escopo": "7ºB", "ano": "7", "medida": "sim", "comp": "GEO", "pct": 34.71, "n": 34}, {"nivel": "turma", "escopo": "7ºB", "ano": "7", "medida": "sim", "comp": "HIS", "pct": 38.24, "n": 34}, {"nivel": "turma", "escopo": "7ºB", "ano": "7", "medida": "sim", "comp": "CIE", "pct": 59.41, "n": 34}, {"nivel": "turma", "escopo": "7ºC", "ano": "7", "medida": "pp1", "comp": "LP", "pct": 45.0, "n": 30}, {"nivel": "turma", "escopo": "7ºC", "ano": "7", "medida": "pp1", "comp": "MAT", "pct": 45.56, "n": 30}, {"nivel": "turma", "escopo": "7ºC", "ano": "7", "medida": "pp1", "comp": "ING", "pct": 57.33, "n": 30}, {"nivel": "turma", "escopo": "7ºC", "ano": "7", "medida": "pp1", "comp": "GEO", "pct": 46.33, "n": 30}, {"nivel": "turma", "escopo": "7ºC", "ano": "7", "medida": "pp1", "comp": "HIS", "pct": 40.67, "n": 30}, {"nivel": "turma", "escopo": "7ºC", "ano": "7", "medida": "pp1", "comp": "CIE", "pct": 52.97, "n": 30}, {"nivel": "turma", "escopo": "7ºC", "ano": "7", "medida": "pp2", "comp": "LP", "pct": 49.55, "n": 33}, {"nivel": "turma", "escopo": "7ºC", "ano": "7", "medida": "pp2", "comp": "MAT", "pct": 56.57, "n": 33}, {"nivel": "turma", "escopo": "7ºC", "ano": "7", "medida": "pp2", "comp": "ING", "pct": 43.64, "n": 33}, {"nivel": "turma", "escopo": "7ºC", "ano": "7", "medida": "pp2", "comp": "GEO", "pct": 45.15, "n": 33}, {"nivel": "turma", "escopo": "7ºC", "ano": "7", "medida": "pp2", "comp": "HIS", "pct": 54.55, "n": 33}, {"nivel": "turma", "escopo": "7ºC", "ano": "7", "medida": "pp2", "comp": "CIE", "pct": 58.48, "n": 33}, {"nivel": "turma", "escopo": "7ºC", "ano": "7", "medida": "oe", "comp": "LP", "pct": 69.32, "n": 32}, {"nivel": "turma", "escopo": "7ºC", "ano": "7", "medida": "oe", "comp": "MAT", "pct": 71.46, "n": 32}, {"nivel": "turma", "escopo": "7ºC", "ano": "7", "medida": "pp3", "comp": "LP", "pct": 58.43, "n": 35}, {"nivel": "turma", "escopo": "7ºC", "ano": "7", "medida": "pp3", "comp": "MAT", "pct": 61.71, "n": 35}, {"nivel": "turma", "escopo": "7ºC", "ano": "7", "medida": "pp3", "comp": "ING", "pct": 38.29, "n": 35}, {"nivel": "turma", "escopo": "7ºC", "ano": "7", "medida": "pp3", "comp": "GEO", "pct": 52.57, "n": 35}, {"nivel": "turma", "escopo": "7ºC", "ano": "7", "medida": "pp3", "comp": "HIS", "pct": 46.0, "n": 35}, {"nivel": "turma", "escopo": "7ºC", "ano": "7", "medida": "pp3", "comp": "CIE", "pct": 52.0, "n": 35}, {"nivel": "turma", "escopo": "7ºC", "ano": "7", "medida": "sim", "comp": "LP", "pct": 85.71, "n": 28}, {"nivel": "turma", "escopo": "7ºC", "ano": "7", "medida": "sim", "comp": "MAT", "pct": 68.57, "n": 28}, {"nivel": "turma", "escopo": "7ºC", "ano": "7", "medida": "sim", "comp": "ING", "pct": 80.0, "n": 28}, {"nivel": "turma", "escopo": "7ºC", "ano": "7", "medida": "sim", "comp": "GEO", "pct": 47.14, "n": 28}, {"nivel": "turma", "escopo": "7ºC", "ano": "7", "medida": "sim", "comp": "HIS", "pct": 68.57, "n": 28}, {"nivel": "turma", "escopo": "7ºC", "ano": "7", "medida": "sim", "comp": "CIE", "pct": 70.0, "n": 28}, {"nivel": "turma", "escopo": "8ºA", "ano": "8", "medida": "pp1", "comp": "LP", "pct": 52.26, "n": 31}, {"nivel": "turma", "escopo": "8ºA", "ano": "8", "medida": "pp1", "comp": "MAT", "pct": 23.34, "n": 30}, {"nivel": "turma", "escopo": "8ºA", "ano": "8", "medida": "pp1", "comp": "ING", "pct": 53.33, "n": 30}, {"nivel": "turma", "escopo": "8ºA", "ano": "8", "medida": "pp1", "comp": "GEO", "pct": 50.65, "n": 31}, {"nivel": "turma", "escopo": "8ºA", "ano": "8", "medida": "pp1", "comp": "HIS", "pct": 38.06, "n": 31}, {"nivel": "turma", "escopo": "8ºA", "ano": "8", "medida": "pp1", "comp": "CIE", "pct": 64.0, "n": 30}, {"nivel": "turma", "escopo": "8ºA", "ano": "8", "medida": "pp2", "comp": "LP", "pct": 57.94, "n": 34}, {"nivel": "turma", "escopo": "8ºA", "ano": "8", "medida": "pp2", "comp": "MAT", "pct": 43.44, "n": 31}, {"nivel": "turma", "escopo": "8ºA", "ano": "8", "medida": "pp2", "comp": "ING", "pct": 52.26, "n": 31}, {"nivel": "turma", "escopo": "8ºA", "ano": "8", "medida": "pp2", "comp": "GEO", "pct": 42.06, "n": 34}, {"nivel": "turma", "escopo": "8ºA", "ano": "8", "medida": "pp2", "comp": "HIS", "pct": 43.82, "n": 34}, {"nivel": "turma", "escopo": "8ºA", "ano": "8", "medida": "pp2", "comp": "CIE", "pct": 58.06, "n": 31}, {"nivel": "turma", "escopo": "8ºA", "ano": "8", "medida": "oe", "comp": "LP", "pct": 52.28, "n": 27}, {"nivel": "turma", "escopo": "8ºA", "ano": "8", "medida": "oe", "comp": "MAT", "pct": 46.44, "n": 27}, {"nivel": "turma", "escopo": "8ºA", "ano": "8", "medida": "pp3", "comp": "LP", "pct": 62.0, "n": 30}, {"nivel": "turma", "escopo": "8ºA", "ano": "8", "medida": "pp3", "comp": "MAT", "pct": 42.99, "n": 29}, {"nivel": "turma", "escopo": "8ºA", "ano": "8", "medida": "pp3", "comp": "ING", "pct": 60.69, "n": 29}, {"nivel": "turma", "escopo": "8ºA", "ano": "8", "medida": "pp3", "comp": "GEO", "pct": 51.67, "n": 30}, {"nivel": "turma", "escopo": "8ºA", "ano": "8", "medida": "pp3", "comp": "HIS", "pct": 51.67, "n": 30}, {"nivel": "turma", "escopo": "8ºA", "ano": "8", "medida": "pp3", "comp": "CIE", "pct": 58.97, "n": 29}, {"nivel": "turma", "escopo": "8ºA", "ano": "8", "medida": "sim", "comp": "LP", "pct": 86.0, "n": 30}, {"nivel": "turma", "escopo": "8ºA", "ano": "8", "medida": "sim", "comp": "MAT", "pct": 60.67, "n": 30}, {"nivel": "turma", "escopo": "8ºA", "ano": "8", "medida": "sim", "comp": "ING", "pct": 76.67, "n": 30}, {"nivel": "turma", "escopo": "8ºA", "ano": "8", "medida": "sim", "comp": "GEO", "pct": 72.67, "n": 30}, {"nivel": "turma", "escopo": "8ºA", "ano": "8", "medida": "sim", "comp": "HIS", "pct": 67.33, "n": 30}, {"nivel": "turma", "escopo": "8ºA", "ano": "8", "medida": "sim", "comp": "CIE", "pct": 84.67, "n": 30}, {"nivel": "turma", "escopo": "8ºB", "ano": "8", "medida": "pp1", "comp": "LP", "pct": 52.43, "n": 35}, {"nivel": "turma", "escopo": "8ºB", "ano": "8", "medida": "pp1", "comp": "MAT", "pct": 24.19, "n": 35}, {"nivel": "turma", "escopo": "8ºB", "ano": "8", "medida": "pp1", "comp": "ING", "pct": 46.86, "n": 35}, {"nivel": "turma", "escopo": "8ºB", "ano": "8", "medida": "pp1", "comp": "GEO", "pct": 53.71, "n": 35}, {"nivel": "turma", "escopo": "8ºB", "ano": "8", "medida": "pp1", "comp": "HIS", "pct": 33.14, "n": 35}, {"nivel": "turma", "escopo": "8ºB", "ano": "8", "medida": "pp1", "comp": "CIE", "pct": 59.71, "n": 35}, {"nivel": "turma", "escopo": "8ºB", "ano": "8", "medida": "pp2", "comp": "LP", "pct": 47.35, "n": 34}, {"nivel": "turma", "escopo": "8ºB", "ano": "8", "medida": "pp2", "comp": "MAT", "pct": 43.81, "n": 35}, {"nivel": "turma", "escopo": "8ºB", "ano": "8", "medida": "pp2", "comp": "ING", "pct": 58.29, "n": 35}, {"nivel": "turma", "escopo": "8ºB", "ano": "8", "medida": "pp2", "comp": "GEO", "pct": 40.0, "n": 34}, {"nivel": "turma", "escopo": "8ºB", "ano": "8", "medida": "pp2", "comp": "HIS", "pct": 35.0, "n": 34}, {"nivel": "turma", "escopo": "8ºB", "ano": "8", "medida": "pp2", "comp": "CIE", "pct": 47.71, "n": 35}, {"nivel": "turma", "escopo": "8ºB", "ano": "8", "medida": "oe", "comp": "LP", "pct": 44.82, "n": 29}, {"nivel": "turma", "escopo": "8ºB", "ano": "8", "medida": "oe", "comp": "MAT", "pct": 51.33, "n": 29}, {"nivel": "turma", "escopo": "8ºB", "ano": "8", "medida": "pp3", "comp": "LP", "pct": 60.47, "n": 32}, {"nivel": "turma", "escopo": "8ºB", "ano": "8", "medida": "pp3", "comp": "MAT", "pct": 39.17, "n": 32}, {"nivel": "turma", "escopo": "8ºB", "ano": "8", "medida": "pp3", "comp": "ING", "pct": 56.88, "n": 32}, {"nivel": "turma", "escopo": "8ºB", "ano": "8", "medida": "pp3", "comp": "GEO", "pct": 50.0, "n": 32}, {"nivel": "turma", "escopo": "8ºB", "ano": "8", "medida": "pp3", "comp": "HIS", "pct": 39.06, "n": 32}, {"nivel": "turma", "escopo": "8ºB", "ano": "8", "medida": "pp3", "comp": "CIE", "pct": 55.31, "n": 32}, {"nivel": "turma", "escopo": "8ºB", "ano": "8", "medida": "sim", "comp": "LP", "pct": 78.67, "n": 30}, {"nivel": "turma", "escopo": "8ºB", "ano": "8", "medida": "sim", "comp": "MAT", "pct": 43.33, "n": 30}, {"nivel": "turma", "escopo": "8ºB", "ano": "8", "medida": "sim", "comp": "ING", "pct": 74.0, "n": 30}, {"nivel": "turma", "escopo": "8ºB", "ano": "8", "medida": "sim", "comp": "GEO", "pct": 68.67, "n": 30}, {"nivel": "turma", "escopo": "8ºB", "ano": "8", "medida": "sim", "comp": "HIS", "pct": 64.0, "n": 30}, {"nivel": "turma", "escopo": "8ºB", "ano": "8", "medida": "sim", "comp": "CIE", "pct": 80.67, "n": 30}, {"nivel": "turma", "escopo": "8ºC", "ano": "8", "medida": "pp1", "comp": "LP", "pct": 68.53, "n": 34}, {"nivel": "turma", "escopo": "8ºC", "ano": "8", "medida": "pp1", "comp": "MAT", "pct": 34.86, "n": 35}, {"nivel": "turma", "escopo": "8ºC", "ano": "8", "medida": "pp1", "comp": "ING", "pct": 73.14, "n": 35}, {"nivel": "turma", "escopo": "8ºC", "ano": "8", "medida": "pp1", "comp": "GEO", "pct": 66.76, "n": 34}, {"nivel": "turma", "escopo": "8ºC", "ano": "8", "medida": "pp1", "comp": "HIS", "pct": 50.59, "n": 34}, {"nivel": "turma", "escopo": "8ºC", "ano": "8", "medida": "pp1", "comp": "CIE", "pct": 79.14, "n": 35}, {"nivel": "turma", "escopo": "8ºC", "ano": "8", "medida": "pp2", "comp": "LP", "pct": 66.43, "n": 35}, {"nivel": "turma", "escopo": "8ºC", "ano": "8", "medida": "pp2", "comp": "MAT", "pct": 48.95, "n": 35}, {"nivel": "turma", "escopo": "8ºC", "ano": "8", "medida": "pp2", "comp": "ING", "pct": 74.86, "n": 35}, {"nivel": "turma", "escopo": "8ºC", "ano": "8", "medida": "pp2", "comp": "GEO", "pct": 61.43, "n": 35}, {"nivel": "turma", "escopo": "8ºC", "ano": "8", "medida": "pp2", "comp": "HIS", "pct": 54.86, "n": 35}, {"nivel": "turma", "escopo": "8ºC", "ano": "8", "medida": "pp2", "comp": "CIE", "pct": 57.71, "n": 35}, {"nivel": "turma", "escopo": "8ºC", "ano": "8", "medida": "oe", "comp": "LP", "pct": 62.28, "n": 31}, {"nivel": "turma", "escopo": "8ºC", "ano": "8", "medida": "oe", "comp": "MAT", "pct": 68.24, "n": 31}, {"nivel": "turma", "escopo": "8ºC", "ano": "8", "medida": "pp3", "comp": "LP", "pct": 77.5, "n": 34}, {"nivel": "turma", "escopo": "8ºC", "ano": "8", "medida": "pp3", "comp": "MAT", "pct": 64.38, "n": 32}, {"nivel": "turma", "escopo": "8ºC", "ano": "8", "medida": "pp3", "comp": "ING", "pct": 76.88, "n": 32}, {"nivel": "turma", "escopo": "8ºC", "ano": "8", "medida": "pp3", "comp": "GEO", "pct": 72.35, "n": 34}, {"nivel": "turma", "escopo": "8ºC", "ano": "8", "medida": "pp3", "comp": "HIS", "pct": 69.41, "n": 34}, {"nivel": "turma", "escopo": "8ºC", "ano": "8", "medida": "pp3", "comp": "CIE", "pct": 70.94, "n": 32}, {"nivel": "turma", "escopo": "8ºC", "ano": "8", "medida": "sim", "comp": "LP", "pct": 85.62, "n": 32}, {"nivel": "turma", "escopo": "8ºC", "ano": "8", "medida": "sim", "comp": "MAT", "pct": 62.5, "n": 32}, {"nivel": "turma", "escopo": "8ºC", "ano": "8", "medida": "sim", "comp": "ING", "pct": 85.0, "n": 32}, {"nivel": "turma", "escopo": "8ºC", "ano": "8", "medida": "sim", "comp": "GEO", "pct": 85.0, "n": 32}, {"nivel": "turma", "escopo": "8ºC", "ano": "8", "medida": "sim", "comp": "HIS", "pct": 78.12, "n": 32}, {"nivel": "turma", "escopo": "8ºC", "ano": "8", "medida": "sim", "comp": "CIE", "pct": 88.75, "n": 32}, {"nivel": "turma", "escopo": "8ºD", "ano": "8", "medida": "pp1", "comp": "LP", "pct": 37.0, "n": 20}, {"nivel": "turma", "escopo": "8ºD", "ano": "8", "medida": "pp1", "comp": "MAT", "pct": 27.01, "n": 19}, {"nivel": "turma", "escopo": "8ºD", "ano": "8", "medida": "pp1", "comp": "ING", "pct": 42.11, "n": 19}, {"nivel": "turma", "escopo": "8ºD", "ano": "8", "medida": "pp1", "comp": "GEO", "pct": 40.0, "n": 20}, {"nivel": "turma", "escopo": "8ºD", "ano": "8", "medida": "pp1", "comp": "HIS", "pct": 29.0, "n": 20}, {"nivel": "turma", "escopo": "8ºD", "ano": "8", "medida": "pp1", "comp": "CIE", "pct": 46.84, "n": 19}, {"nivel": "turma", "escopo": "8ºD", "ano": "8", "medida": "pp2", "comp": "LP", "pct": 38.68, "n": 19}, {"nivel": "turma", "escopo": "8ºD", "ano": "8", "medida": "pp2", "comp": "MAT", "pct": 31.58, "n": 19}, {"nivel": "turma", "escopo": "8ºD", "ano": "8", "medida": "pp2", "comp": "ING", "pct": 30.53, "n": 19}, {"nivel": "turma", "escopo": "8ºD", "ano": "8", "medida": "pp2", "comp": "GEO", "pct": 31.58, "n": 19}, {"nivel": "turma", "escopo": "8ºD", "ano": "8", "medida": "pp2", "comp": "HIS", "pct": 27.37, "n": 19}, {"nivel": "turma", "escopo": "8ºD", "ano": "8", "medida": "pp2", "comp": "CIE", "pct": 38.95, "n": 19}, {"nivel": "turma", "escopo": "8ºD", "ano": "8", "medida": "oe", "comp": "LP", "pct": 30.77, "n": 18}, {"nivel": "turma", "escopo": "8ºD", "ano": "8", "medida": "oe", "comp": "MAT", "pct": 30.14, "n": 18}, {"nivel": "turma", "escopo": "8ºD", "ano": "8", "medida": "pp3", "comp": "LP", "pct": 42.63, "n": 19}, {"nivel": "turma", "escopo": "8ºD", "ano": "8", "medida": "pp3", "comp": "MAT", "pct": 27.01, "n": 19}, {"nivel": "turma", "escopo": "8ºD", "ano": "8", "medida": "pp3", "comp": "ING", "pct": 32.63, "n": 19}, {"nivel": "turma", "escopo": "8ºD", "ano": "8", "medida": "pp3", "comp": "GEO", "pct": 28.42, "n": 19}, {"nivel": "turma", "escopo": "8ºD", "ano": "8", "medida": "pp3", "comp": "HIS", "pct": 27.89, "n": 19}, {"nivel": "turma", "escopo": "8ºD", "ano": "8", "medida": "pp3", "comp": "CIE", "pct": 33.16, "n": 19}, {"nivel": "turma", "escopo": "8ºD", "ano": "8", "medida": "sim", "comp": "LP", "pct": 57.14, "n": 14}, {"nivel": "turma", "escopo": "8ºD", "ano": "8", "medida": "sim", "comp": "MAT", "pct": 34.29, "n": 14}, {"nivel": "turma", "escopo": "8ºD", "ano": "8", "medida": "sim", "comp": "ING", "pct": 57.14, "n": 14}, {"nivel": "turma", "escopo": "8ºD", "ano": "8", "medida": "sim", "comp": "GEO", "pct": 45.71, "n": 14}, {"nivel": "turma", "escopo": "8ºD", "ano": "8", "medida": "sim", "comp": "HIS", "pct": 52.86, "n": 14}, {"nivel": "turma", "escopo": "8ºD", "ano": "8", "medida": "sim", "comp": "CIE", "pct": 64.29, "n": 14}, {"nivel": "turma", "escopo": "9ºA", "ano": "9", "medida": "pp1", "comp": "LP", "pct": 64.55, "n": 33}, {"nivel": "turma", "escopo": "9ºA", "ano": "9", "medida": "pp1", "comp": "MAT", "pct": 37.29, "n": 35}, {"nivel": "turma", "escopo": "9ºA", "ano": "9", "medida": "pp1", "comp": "ING", "pct": 69.71, "n": 35}, {"nivel": "turma", "escopo": "9ºA", "ano": "9", "medida": "pp1", "comp": "GEO", "pct": 61.82, "n": 33}, {"nivel": "turma", "escopo": "9ºA", "ano": "9", "medida": "pp1", "comp": "HIS", "pct": 66.06, "n": 33}, {"nivel": "turma", "escopo": "9ºA", "ano": "9", "medida": "pp1", "comp": "CIE", "pct": 40.77, "n": 35}, {"nivel": "turma", "escopo": "9ºA", "ano": "9", "medida": "pp2", "comp": "LP", "pct": 61.57, "n": 35}, {"nivel": "turma", "escopo": "9ºA", "ano": "9", "medida": "pp2", "comp": "MAT", "pct": 55.15, "n": 34}, {"nivel": "turma", "escopo": "9ºA", "ano": "9", "medida": "pp2", "comp": "ING", "pct": 54.71, "n": 34}, {"nivel": "turma", "escopo": "9ºA", "ano": "9", "medida": "pp2", "comp": "GEO", "pct": 60.0, "n": 35}, {"nivel": "turma", "escopo": "9ºA", "ano": "9", "medida": "pp2", "comp": "HIS", "pct": 50.86, "n": 35}, {"nivel": "turma", "escopo": "9ºA", "ano": "9", "medida": "pp2", "comp": "CIE", "pct": 39.41, "n": 34}, {"nivel": "turma", "escopo": "9ºA", "ano": "9", "medida": "oe", "comp": "LP", "pct": 61.94, "n": 29}, {"nivel": "turma", "escopo": "9ºA", "ano": "9", "medida": "oe", "comp": "MAT", "pct": 64.6, "n": 29}, {"nivel": "turma", "escopo": "9ºA", "ano": "9", "medida": "pp3", "comp": "LP", "pct": 69.71, "n": 34}, {"nivel": "turma", "escopo": "9ºA", "ano": "9", "medida": "pp3", "comp": "MAT", "pct": 55.0, "n": 33}, {"nivel": "turma", "escopo": "9ºA", "ano": "9", "medida": "pp3", "comp": "ING", "pct": 61.21, "n": 33}, {"nivel": "turma", "escopo": "9ºA", "ano": "9", "medida": "pp3", "comp": "GEO", "pct": 52.94, "n": 34}, {"nivel": "turma", "escopo": "9ºA", "ano": "9", "medida": "pp3", "comp": "HIS", "pct": 62.94, "n": 34}, {"nivel": "turma", "escopo": "9ºA", "ano": "9", "medida": "pp3", "comp": "CIE", "pct": 45.25, "n": 33}, {"nivel": "turma", "escopo": "9ºA", "ano": "9", "medida": "sim", "comp": "LP", "pct": 86.77, "n": 31}, {"nivel": "turma", "escopo": "9ºA", "ano": "9", "medida": "sim", "comp": "MAT", "pct": 52.26, "n": 31}, {"nivel": "turma", "escopo": "9ºA", "ano": "9", "medida": "sim", "comp": "ING", "pct": 70.32, "n": 31}, {"nivel": "turma", "escopo": "9ºA", "ano": "9", "medida": "sim", "comp": "GEO", "pct": 76.77, "n": 31}, {"nivel": "turma", "escopo": "9ºA", "ano": "9", "medida": "sim", "comp": "HIS", "pct": 74.84, "n": 31}, {"nivel": "turma", "escopo": "9ºA", "ano": "9", "medida": "sim", "comp": "CIE", "pct": 61.94, "n": 31}, {"nivel": "turma", "escopo": "9ºB", "ano": "9", "medida": "pp1", "comp": "LP", "pct": 55.65, "n": 31}, {"nivel": "turma", "escopo": "9ºB", "ano": "9", "medida": "pp1", "comp": "MAT", "pct": 25.65, "n": 31}, {"nivel": "turma", "escopo": "9ºB", "ano": "9", "medida": "pp1", "comp": "ING", "pct": 57.42, "n": 31}, {"nivel": "turma", "escopo": "9ºB", "ano": "9", "medida": "pp1", "comp": "GEO", "pct": 55.16, "n": 31}, {"nivel": "turma", "escopo": "9ºB", "ano": "9", "medida": "pp1", "comp": "HIS", "pct": 46.45, "n": 31}, {"nivel": "turma", "escopo": "9ºB", "ano": "9", "medida": "pp1", "comp": "CIE", "pct": 32.69, "n": 31}, {"nivel": "turma", "escopo": "9ºB", "ano": "9", "medida": "pp2", "comp": "LP", "pct": 51.82, "n": 33}, {"nivel": "turma", "escopo": "9ºB", "ano": "9", "medida": "pp2", "comp": "MAT", "pct": 32.12, "n": 33}, {"nivel": "turma", "escopo": "9ºB", "ano": "9", "medida": "pp2", "comp": "ING", "pct": 50.3, "n": 33}, {"nivel": "turma", "escopo": "9ºB", "ano": "9", "medida": "pp2", "comp": "GEO", "pct": 54.85, "n": 33}, {"nivel": "turma", "escopo": "9ºB", "ano": "9", "medida": "pp2", "comp": "HIS", "pct": 35.45, "n": 33}, {"nivel": "turma", "escopo": "9ºB", "ano": "9", "medida": "pp2", "comp": "CIE", "pct": 36.37, "n": 33}, {"nivel": "turma", "escopo": "9ºB", "ano": "9", "medida": "oe", "comp": "LP", "pct": 45.26, "n": 26}, {"nivel": "turma", "escopo": "9ºB", "ano": "9", "medida": "oe", "comp": "MAT", "pct": 42.6, "n": 26}, {"nivel": "turma", "escopo": "9ºB", "ano": "9", "medida": "pp3", "comp": "LP", "pct": 65.67, "n": 30}, {"nivel": "turma", "escopo": "9ºB", "ano": "9", "medida": "pp3", "comp": "MAT", "pct": 41.9, "n": 29}, {"nivel": "turma", "escopo": "9ºB", "ano": "9", "medida": "pp3", "comp": "ING", "pct": 46.9, "n": 29}, {"nivel": "turma", "escopo": "9ºB", "ano": "9", "medida": "pp3", "comp": "GEO", "pct": 42.33, "n": 30}, {"nivel": "turma", "escopo": "9ºB", "ano": "9", "medida": "pp3", "comp": "HIS", "pct": 43.33, "n": 30}, {"nivel": "turma", "escopo": "9ºB", "ano": "9", "medida": "pp3", "comp": "CIE", "pct": 42.76, "n": 29}, {"nivel": "turma", "escopo": "9ºB", "ano": "9", "medida": "sim", "comp": "LP", "pct": 81.48, "n": 27}, {"nivel": "turma", "escopo": "9ºB", "ano": "9", "medida": "sim", "comp": "MAT", "pct": 42.59, "n": 27}, {"nivel": "turma", "escopo": "9ºB", "ano": "9", "medida": "sim", "comp": "ING", "pct": 50.37, "n": 27}, {"nivel": "turma", "escopo": "9ºB", "ano": "9", "medida": "sim", "comp": "GEO", "pct": 67.41, "n": 27}, {"nivel": "turma", "escopo": "9ºB", "ano": "9", "medida": "sim", "comp": "HIS", "pct": 68.89, "n": 27}, {"nivel": "turma", "escopo": "9ºB", "ano": "9", "medida": "sim", "comp": "CIE", "pct": 59.26, "n": 27}, {"nivel": "turma", "escopo": "9ºC", "ano": "9", "medida": "pp1", "comp": "LP", "pct": 54.84, "n": 31}, {"nivel": "turma", "escopo": "9ºC", "ano": "9", "medida": "pp1", "comp": "MAT", "pct": 23.55, "n": 31}, {"nivel": "turma", "escopo": "9ºC", "ano": "9", "medida": "pp1", "comp": "ING", "pct": 56.13, "n": 31}, {"nivel": "turma", "escopo": "9ºC", "ano": "9", "medida": "pp1", "comp": "GEO", "pct": 43.23, "n": 31}, {"nivel": "turma", "escopo": "9ºC", "ano": "9", "medida": "pp1", "comp": "HIS", "pct": 47.74, "n": 31}, {"nivel": "turma", "escopo": "9ºC", "ano": "9", "medida": "pp1", "comp": "CIE", "pct": 28.38, "n": 31}, {"nivel": "turma", "escopo": "9ºC", "ano": "9", "medida": "pp2", "comp": "LP", "pct": 47.66, "n": 32}, {"nivel": "turma", "escopo": "9ºC", "ano": "9", "medida": "pp2", "comp": "MAT", "pct": 32.66, "n": 32}, {"nivel": "turma", "escopo": "9ºC", "ano": "9", "medida": "pp2", "comp": "ING", "pct": 41.88, "n": 32}, {"nivel": "turma", "escopo": "9ºC", "ano": "9", "medida": "pp2", "comp": "GEO", "pct": 45.62, "n": 32}, {"nivel": "turma", "escopo": "9ºC", "ano": "9", "medida": "pp2", "comp": "HIS", "pct": 25.94, "n": 32}, {"nivel": "turma", "escopo": "9ºC", "ano": "9", "medida": "pp2", "comp": "CIE", "pct": 30.63, "n": 32}, {"nivel": "turma", "escopo": "9ºC", "ano": "9", "medida": "oe", "comp": "LP", "pct": 44.39, "n": 24}, {"nivel": "turma", "escopo": "9ºC", "ano": "9", "medida": "oe", "comp": "MAT", "pct": 36.22, "n": 24}, {"nivel": "turma", "escopo": "9ºC", "ano": "9", "medida": "pp3", "comp": "LP", "pct": 58.7, "n": 27}, {"nivel": "turma", "escopo": "9ºC", "ano": "9", "medida": "pp3", "comp": "MAT", "pct": 39.62, "n": 26}, {"nivel": "turma", "escopo": "9ºC", "ano": "9", "medida": "pp3", "comp": "ING", "pct": 48.46, "n": 26}, {"nivel": "turma", "escopo": "9ºC", "ano": "9", "medida": "pp3", "comp": "GEO", "pct": 37.41, "n": 27}, {"nivel": "turma", "escopo": "9ºC", "ano": "9", "medida": "pp3", "comp": "HIS", "pct": 43.33, "n": 27}, {"nivel": "turma", "escopo": "9ºC", "ano": "9", "medida": "pp3", "comp": "CIE", "pct": 29.24, "n": 26}, {"nivel": "turma", "escopo": "9ºC", "ano": "9", "medida": "sim", "comp": "LP", "pct": 74.8, "n": 25}, {"nivel": "turma", "escopo": "9ºC", "ano": "9", "medida": "sim", "comp": "MAT", "pct": 38.4, "n": 25}, {"nivel": "turma", "escopo": "9ºC", "ano": "9", "medida": "sim", "comp": "ING", "pct": 58.4, "n": 25}, {"nivel": "turma", "escopo": "9ºC", "ano": "9", "medida": "sim", "comp": "GEO", "pct": 53.6, "n": 25}, {"nivel": "turma", "escopo": "9ºC", "ano": "9", "medida": "sim", "comp": "HIS", "pct": 66.4, "n": 25}, {"nivel": "turma", "escopo": "9ºC", "ano": "9", "medida": "sim", "comp": "CIE", "pct": 49.6, "n": 25}], "presenca_simulado": [{"nivel": "ano", "escopo": "6", "ano": "6", "presentes": 88, "ausentes": 26, "matriculados": 121}, {"nivel": "ano", "escopo": "7", "ano": "7", "presentes": 98, "ausentes": 12, "matriculados": 111}, {"nivel": "ano", "escopo": "8", "ano": "8", "presentes": 106, "ausentes": 21, "matriculados": 132}, {"nivel": "ano", "escopo": "9", "ano": "9", "presentes": 83, "ausentes": 20, "matriculados": 110}, {"nivel": "turma", "escopo": "6ºA", "ano": "6", "presentes": 31, "ausentes": 8, "matriculados": 41}, {"nivel": "turma", "escopo": "6ºB", "ano": "6", "presentes": 30, "ausentes": 8, "matriculados": 40}, {"nivel": "turma", "escopo": "6ºC", "ano": "6", "presentes": 27, "ausentes": 10, "matriculados": 40}, {"nivel": "turma", "escopo": "7ºA", "ano": "7", "presentes": 36, "ausentes": 1, "matriculados": 37}, {"nivel": "turma", "escopo": "7ºB", "ano": "7", "presentes": 34, "ausentes": 3, "matriculados": 38}, {"nivel": "turma", "escopo": "7ºC", "ano": "7", "presentes": 28, "ausentes": 8, "matriculados": 36}, {"nivel": "turma", "escopo": "8ºA", "ano": "8", "presentes": 30, "ausentes": 5, "matriculados": 38}, {"nivel": "turma", "escopo": "8ºB", "ano": "8", "presentes": 30, "ausentes": 5, "matriculados": 36}, {"nivel": "turma", "escopo": "8ºC", "ano": "8", "presentes": 32, "ausentes": 3, "matriculados": 35}, {"nivel": "turma", "escopo": "8ºD", "ano": "8", "presentes": 14, "ausentes": 8, "matriculados": 23}, {"nivel": "turma", "escopo": "9ºA", "ano": "9", "presentes": 31, "ausentes": 3, "matriculados": 36}, {"nivel": "turma", "escopo": "9ºB", "ano": "9", "presentes": 27, "ausentes": 7, "matriculados": 36}, {"nivel": "turma", "escopo": "9ºC", "ano": "9", "presentes": 25, "ausentes": 10, "matriculados": 38}], "saresp_2025": [{"ano": "6", "comp": "LP", "valor": 5.9}, {"ano": "6", "comp": "MAT", "valor": 4.4}, {"ano": "6", "comp": "ING", "valor": 4.8}, {"ano": "6", "comp": "GEO", "valor": 5.3}, {"ano": "6", "comp": "HIS", "valor": 4.3}, {"ano": "6", "comp": "CIE", "valor": 4.0}, {"ano": "6", "comp": "NG", "valor": 4.8}, {"ano": "6", "comp": "PART", "valor": 86.3}, {"ano": "7", "comp": "LP", "valor": 5.1}, {"ano": "7", "comp": "MAT", "valor": 4.0}, {"ano": "7", "comp": "ING", "valor": 4.5}, {"ano": "7", "comp": "GEO", "valor": 4.6}, {"ano": "7", "comp": "HIS", "valor": 3.3}, {"ano": "7", "comp": "CIE", "valor": 4.0}, {"ano": "7", "comp": "NG", "valor": 4.3}, {"ano": "7", "comp": "PART", "valor": 88.4}, {"ano": "8", "comp": "LP", "valor": 5.1}, {"ano": "8", "comp": "MAT", "valor": 3.6}, {"ano": "8", "comp": "ING", "valor": 4.2}, {"ano": "8", "comp": "GEO", "valor": 3.8}, {"ano": "8", "comp": "HIS", "valor": 3.8}, {"ano": "8", "comp": "CIE", "valor": 4.3}, {"ano": "8", "comp": "NG", "valor": 4.2}, {"ano": "8", "comp": "PART", "valor": 94.0}, {"ano": "9", "comp": "LP", "valor": 4.9}, {"ano": "9", "comp": "MAT", "valor": 4.6}, {"ano": "9", "comp": "ING", "valor": 5.9}, {"ano": "9", "comp": "GEO", "valor": 4.3}, {"ano": "9", "comp": "HIS", "valor": 5.4}, {"ano": "9", "comp": "CIE", "valor": 6.2}, {"ano": "9", "comp": "NG", "valor": 5.1}, {"ano": "9", "comp": "PART", "valor": 90.1}, {"ano": "AF", "comp": "NF", "valor": 4.6}]}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+/* ambiente mínimo que substitui o runtime do painel: dados embutidos, cálculos encadeados e filtros */
+window.dash = (() => {
+  const SRC = JSON.parse(document.getElementById('dados-proj').textContent);
+  const calcs = {}, ouvintes = [], cache = {};
+  let params = { cenario: 'provavel', base: 'pp', comparar: true };
+  const data = (id) => {
+    if (id in SRC) return { status: 'ok', data: SRC[id] };
+    if (!(id in cache)) { const c = calcs[id]; if (!c) return { status: 'missing', data: [] }; cache[id] = c.fn(...c.inputs.map(i => data(i).data)); }
+    return { status: 'ok', data: cache[id] };
+  };
+  const roda = () => ouvintes.forEach(f => f());
+  let t; window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(roda, 120); });
+  return {
+    calc: (id, o) => { calcs[id] = o; },
+    data,
+    onData: (f) => { ouvintes.push(f); f(); },
+    params: () => ({ ...params }),
+    setParams: (p) => { Object.assign(params, p); roda(); },
+    resetParams: () => { params = { cenario: 'provavel', base: 'pp', comparar: true }; roda(); },
+    setLink: () => {},
+    colors: ['var(--lp)'],
+  };
+})();
+</script>
+<script>
+dash.calc('indice', {
+  title: 'Índice de acerto 2026',
+  description: 'Média ponderada do acerto (%) nas medidas de 2026, por base, ano/turma e componente.',
+  inputs: ['medidas_2026'],
+  fn: (medidas_2026) => {
+    const P = { pp: { pp1: .2, pp2: .3, pp3: .5 }, todas: { pp1: .15, pp2: .2, oe: .1, pp3: .35, sim: .2 } };
+    const g = new Map();
+    for (const r of medidas_2026) {
+      const k = r.escopo + '|' + r.comp;
+      if (!g.has(k)) g.set(k, { nivel: r.nivel, escopo: r.escopo, ano: String(r.ano), comp: r.comp, m: {} });
+      g.get(k).m[r.medida] = Number(r.pct);
+    }
+    const out = [];
+    for (const base of Object.keys(P)) for (const x of g.values()) {
+      let s = 0, w = 0;
+      for (const [m, p] of Object.entries(P[base])) if (x.m[m] != null) { s += p * x.m[m]; w += p; }
+      if (w) out.push({ chave: base + '|' + x.escopo + '|' + x.comp, base, nivel: x.nivel, escopo: x.escopo, ano: x.ano, comp: x.comp, indice: Math.round(s / w * 10) / 10 });
+    }
+    return out;
+  }
+});
+
+dash.calc('coortes', {
+  title: 'Pares de coorte',
+  description: 'SARESP 2025 de cada coorte ao lado do índice 2026 das mesmas turmas, um ano depois.',
+  inputs: ['indice', 'saresp_2025'],
+  fn: (indice, saresp_2025) => {
+    const nome = { LP: 'LP', MAT: 'MAT', ING: 'LI', GEO: 'GEO', HIS: 'HIS', CIE: 'CIE' };
+    const s = new Map(saresp_2025.map(r => [r.ano + '|' + r.comp, Number(r.valor)]));
+    return indice.filter(r => r.nivel === 'ano' && r.ano !== '6').map(r => {
+      const prev = String(Number(r.ano) - 1), v = s.get(prev + '|' + r.comp);
+      return { chave: r.base + '|' + r.ano + '|' + r.comp, base: r.base, coorte: r.ano + 'º 2026 ← ' + prev + 'º 2025', ano: r.ano, comp: r.comp, compNome: nome[r.comp], saresp2025: v, indice2026: r.indice, razao: Math.round(v * 10 / r.indice * 100) / 100 };
+    });
+  }
+});
+
+dash.calc('calibracao', {
+  title: 'Fator de conversão',
+  description: 'Soma das notas SARESP 2025 (×10) dividida pela soma dos índices 2026 das coortes; cenários pelos quartis das razões.',
+  inputs: ['coortes'],
+  fn: (coortes) => ['pp', 'todas'].map(base => {
+    const c = coortes.filter(r => r.base === base);
+    const k = c.reduce((a, r) => a + r.saresp2025 * 10, 0) / c.reduce((a, r) => a + r.indice2026, 0);
+    const r = c.map(x => x.saresp2025 * 10 / x.indice2026).sort((a, b) => a - b);
+    const q = p => { const i = (r.length - 1) * p, lo = Math.floor(i); return r[lo] + (r[Math.min(lo + 1, r.length - 1)] - r[lo]) * (i - lo); };
+    const media = r.reduce((a, b) => a + b, 0) / r.length;
+    const r3 = v => Math.round(v * 1000) / 1000;
+    return { base, k: r3(k), k_cons: r3(k * q(.25) / media), k_otim: r3(k * q(.75) / media), pares: r.length };
+  })
+});
+
+dash.calc('projecao', {
+  title: 'Boletim projetado',
+  description: 'Nota = fator × índice ÷ 10 por componente; Nota Global com peso 1,5 em LP e MAT; participação pela presença no Simulado. Inclui as linhas do boletim 2025.',
+  inputs: ['indice', 'calibracao', 'presenca_simulado', 'saresp_2025'],
+  fn: (indice, calibracao, presenca_simulado, saresp_2025) => {
+    const C = ['LP', 'MAT', 'ING', 'GEO', 'HIS', 'CIE'], W = { LP: 1.5, MAT: 1.5, ING: 1, GEO: 1, HIS: 1, CIE: 1 };
+    const r1 = v => Math.round(v * 10) / 10;
+    const pres = new Map(presenca_simulado.map(p => [p.escopo, 100 * p.presentes / (p.presentes + p.ausentes)]));
+    const out = [];
+    for (const cal of calibracao) {
+      const esc = new Map();
+      for (const r of indice.filter(r => r.base === cal.base)) {
+        if (!esc.has(r.escopo)) esc.set(r.escopo, { nivel: r.nivel, escopo: r.escopo, ano: r.ano, v: {} });
+        esc.get(r.escopo).v[r.comp] = r.indice;
+      }
+      for (const [cenario, k] of [['conservador', cal.k_cons], ['provavel', cal.k], ['otimista', cal.k_otim]]) for (const e of esc.values()) {
+        const row = { chave: cal.base + '|' + cenario + '|' + e.escopo, base: cal.base, cenario, nivel: e.nivel, escopo: e.escopo, ano: e.ano, rotulo: e.nivel === 'ano' ? e.ano + 'º ano' : e.escopo };
+        let s = 0, w = 0;
+        for (const c of C) { const n = Math.min(10, k * e.v[c] / 10); row[c] = r1(n); s += W[c] * n; w += W[c]; }
+        row.NG = r1(s / w);
+        row.PART = r1(pres.get(e.escopo));
+        out.push(row);
+      }
+    }
+    for (const ano of ['6', '7', '8', '9']) {
+      const row = { chave: 'oficial|' + ano, base: 'oficial', cenario: 'oficial', nivel: 'ano', escopo: ano, ano, rotulo: '2025 · boletim' };
+      for (const r of saresp_2025.filter(r => r.ano === ano)) row[r.comp] = Number(r.valor);
+      out.push(row);
+    }
+    return out;
+  }
+});
+
+dash.calc('nota_final', {
+  title: 'Nota Final projetada',
+  description: 'Média das Notas Globais projetadas do 6º ao 9º ano, comparada com a Nota Final 2025.',
+  inputs: ['projecao', 'saresp_2025'],
+  fn: (projecao, saresp_2025) => {
+    const nf25 = Number(saresp_2025.find(r => r.ano === 'AF' && r.comp === 'NF').valor);
+    const out = [];
+    for (const base of ['pp', 'todas']) for (const cenario of ['conservador', 'provavel', 'otimista']) {
+      const ng = projecao.filter(r => r.base === base && r.cenario === cenario && r.nivel === 'ano').map(r => r.NG);
+      const nf = Math.round(ng.reduce((a, b) => a + b, 0) / ng.length * 10) / 10;
+      out.push({ chave: base + '|' + cenario, base, cenario, NF: nf, NF2025: nf25, delta: Math.round((nf - nf25) * 10) / 10 });
+    }
+    return out;
+  }
+});
+
+dash.calc('lacunas', {
+  title: 'Distância até o próximo patamar',
+  description: 'Pontos percentuais de acerto no índice que faltam para chegar a 4,1 e à nota 2025 do mesmo ano: (alvo − projeção) × 10 ÷ fator, arredondado para cima.',
+  inputs: ['projecao', 'calibracao'],
+  fn: (projecao, calibracao) => {
+    const C = ['LP', 'MAT', 'ING', 'GEO', 'HIS', 'CIE'], nome = { LP: 'LP', MAT: 'MAT', ING: 'LI', GEO: 'GEO', HIS: 'HIS', CIE: 'CIE' };
+    const of = new Map(projecao.filter(r => r.base === 'oficial').map(r => [r.ano, r]));
+    const out = [];
+    for (const r of projecao.filter(r => r.base !== 'oficial' && r.nivel === 'ano')) {
+      const cal = calibracao.find(c => c.base === r.base);
+      const k = r.cenario === 'conservador' ? cal.k_cons : r.cenario === 'otimista' ? cal.k_otim : cal.k;
+      for (const c of C) {
+        const n = r[c], n25 = of.get(r.ano)[c];
+        out.push({ chave: r.base + '|' + r.cenario + '|' + r.ano + '|' + c, base: r.base, cenario: r.cenario, ano: r.ano, comp: c, rotulo: r.ano + 'º · ' + nome[c], nota: n, nota2025: n25, pp_medio: n > 4 ? null : Math.ceil((4.1 - n) * 10 / k), pp_2025: n >= n25 ? null : Math.ceil((n25 - n) * 10 / k) });
+      }
+    }
+    return out;
+  }
+});
+
+(() => {
+  const P = { cenario: 'provavel', base: 'pp', comparar: true };
+  const prm = () => Object.assign({}, P, dash.params());
+  const fmt = (v, d = 1) => v == null || isNaN(v) ? '—' : Number(v).toFixed(d).replace('.', ',');
+  const faixa = v => v == null ? '' : v <= 4 ? 'sp-bad' : v <= 6 ? 'sp-warn' : 'sp-ok';
+  const CEN = { conservador: 'conservador', provavel: 'provável', otimista: 'otimista' };
+  const COLS = ['NG', 'PART', 'LP', 'MAT', 'ING', 'GEO', 'HIS', 'CIE'];
+  let animado = false;
+
+  document.querySelectorAll('#seg-cenario button').forEach(b => b.addEventListener('click', () => dash.setParams({ cenario: b.dataset.v })));
+  document.querySelectorAll('#seg-base button').forEach(b => b.addEventListener('click', () => dash.setParams({ base: b.dataset.v })));
+  document.getElementById('chk-2025').addEventListener('change', e => dash.setParams({ comparar: e.target.checked }));
+
+  const fail = (el) => { el.replaceChildren(); const d = document.createElement('div'); d.className = 'sp-fail'; const i = document.createElement('i'); const t = document.createElement('span'); t.textContent = 'Failed to load'; d.append(i, t); el.append(d); };
+
+  function linha(tbody, r, cls) {
+    const tr = document.createElement('tr');
+    tr.dataset.key = r.chave; if (cls) tr.className = cls;
+    const td0 = document.createElement('td'); td0.textContent = r.rotulo; tr.append(td0);
+    for (const c of COLS) {
+      const td = document.createElement('td');
+      if (c === 'NG') td.classList.add('sp-ng');
+      if (c === 'PART') {
+        td.textContent = r.PART == null ? '—' : fmt(r.PART) + '%';
+        if (r.PART != null && r.PART < 80) { const s = document.createElement('span'); s.className = 'sp-alert'; s.textContent = '⚠'; s.title = 'Participação abaixo de 80%'; td.append(s); }
+      } else if (c === 'NG') { td.textContent = fmt(r[c]); }
+      else { td.textContent = fmt(r[c]); td.classList.add(faixa(r[c])); }
+      tr.append(td);
+    }
+    tbody.append(tr);
+  }
+
+  function grafico(el, proj, of, p) {
+    el.replaceChildren();
+    const W = Math.max(280, el.clientWidth), anos = ['6', '7', '8', '9'];
+    const rows = anos.map(a => {
+      const g = c => proj.find(r => r.base === p.base && r.cenario === c && r.escopo === a);
+      return { ano: a, of: of.find(r => r.ano === a).NG, lo: g('conservador').NG, mid: g(p.cenario).NG, hi: g('otimista').NG };
+    });
+    const ml = 56, mr = 16, mt = 22, mb = 30, rowH = 44, H = mt + mb + rowH * anos.length;
+    const all = rows.flatMap(r => [r.of, r.lo, r.hi]);
+    const x = d3.scaleLinear([Math.min(3, Math.floor(d3.min(all) * 2) / 2), Math.max(6.5, Math.ceil(d3.max(all) * 2) / 2)], [ml, W - mr]);
+    const y = d3.scaleBand(anos, [mt, H - mb]).padding(.4);
+    const svg = d3.select(el).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`);
+    svg.append('rect').attr('x', x(x.domain()[0])).attr('y', mt).attr('width', x(4) - x(x.domain()[0])).attr('height', H - mt - mb).attr('fill', 'var(--color-bad)').attr('opacity', .06);
+    svg.append('rect').attr('x', x(6)).attr('y', mt).attr('width', Math.max(0, x(x.domain()[1]) - x(6))).attr('height', H - mt - mb).attr('fill', 'var(--color-ok)').attr('opacity', .06);
+    const ticks = x.ticks(Math.max(3, Math.floor(W / 70)));
+    svg.append('g').selectAll('line').data(ticks).join('line').attr('x1', d => x(d)).attr('x2', d => x(d)).attr('y1', mt).attr('y2', H - mb).attr('stroke', 'var(--cds-chart-grid)');
+    svg.append('g').selectAll('text').data(ticks).join('text').attr('x', d => x(d)).attr('y', H - mb + 18).attr('text-anchor', 'middle').attr('fill', 'var(--color-fg-muted)').attr('font-size', 'var(--cds-font-size-caption)').text(d => fmt(d));
+    [4, 6].forEach(v => svg.append('line').attr('x1', x(v)).attr('x2', x(v)).attr('y1', mt - 6).attr('y2', H - mb).attr('stroke', 'var(--cds-chart-reference)').attr('stroke-dasharray', '3 3'));
+    svg.append('text').attr('x', x(4) - 4).attr('y', mt - 9).attr('text-anchor', 'end').attr('fill', 'var(--color-fg-muted)').attr('font-size', 'var(--cds-font-size-caption)').text('baixo');
+    svg.append('text').attr('x', x(6) + 4).attr('y', mt - 9).attr('fill', 'var(--color-fg-muted)').attr('font-size', 'var(--cds-font-size-caption)').text('alto');
+    const g = svg.append('g').selectAll('g').data(rows).join('g').attr('transform', d => `translate(0,${y(d.ano) + y.bandwidth() / 2})`);
+    g.append('text').attr('x', 0).attr('dy', '.35em').attr('fill', 'var(--color-fg)').attr('font-size', 'var(--cds-font-size-caption)').text(d => d.ano + 'º ano');
+    g.append('line').attr('x1', d => x(d.lo)).attr('x2', d => x(d.hi)).attr('stroke', dash.colors[0]).attr('stroke-width', 8).attr('stroke-linecap', 'round').attr('opacity', .22);
+    g.append('line').attr('x1', d => x(d.of)).attr('x2', d => x(d.mid)).attr('stroke', 'var(--cds-chart-muted)').attr('stroke-width', 1.5);
+    g.append('circle').attr('cx', d => x(d.of)).attr('r', 6).attr('fill', 'var(--color-panel)').attr('stroke', 'var(--cds-chart-muted)').attr('stroke-width', 2);
+    g.append('circle').attr('class', 'sp-dot').attr('cx', d => x(d.mid)).attr('r', 6.5).attr('fill', dash.colors[0]);
+    const tip = d3.select(el).append('div').attr('class', 'sp-tip');
+    g.append('rect').attr('x', ml).attr('y', -y.bandwidth()).attr('width', W - ml - mr).attr('height', y.bandwidth() * 2).attr('fill', 'transparent')
+      .on('mousemove', (ev, d) => {
+        tip.html('');
+        tip.append('div').attr('class', 'sp-tip-h').text(d.ano + 'º ano · Nota Global');
+        tip.append('div').text('2025 (boletim): ' + fmt(d.of));
+        tip.append('div').text('2026 ' + CEN[p.cenario] + ': ' + fmt(d.mid));
+        tip.append('div').text('Faixa: ' + fmt(d.lo) + ' a ' + fmt(d.hi));
+        const [mx, my] = d3.pointer(ev, el), tw = tip.node().offsetWidth;
+        tip.style('left', Math.min(Math.max(0, mx + 12), el.clientWidth - tw) + 'px').style('top', (my + 12) + 'px').style('opacity', 1);
+      })
+      .on('mouseleave', () => tip.style('opacity', 0));
+    if (!animado && window.matchMedia('(prefers-reduced-motion: no-preference)').matches) { animado = true; el.classList.add('sp-in'); }
+  }
+
+  dash.onData(() => {
+    const p = prm();
+    document.querySelectorAll('#seg-cenario button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === p.cenario)));
+    document.querySelectorAll('#seg-base button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === p.base)));
+    document.getElementById('chk-2025').checked = !!p.comparar;
+
+    const pr = dash.data('projecao'), nf = dash.data('nota_final'), s25 = dash.data('saresp_2025'), lac = dash.data('lacunas'), cal = dash.data('calibracao'), coo = dash.data('coortes');
+    const ok = d => d.status === 'ok' && Array.isArray(d.data) && d.data.length;
+
+    // Nota Final
+    const elNF = document.getElementById('kpi-nf'), elD = document.getElementById('kpi-delta'), el25 = document.getElementById('kpi-nf25');
+    if (ok(nf)) {
+      const r = nf.data.find(x => x.base === p.base && x.cenario === p.cenario);
+      const lo = nf.data.find(x => x.base === p.base && x.cenario === 'conservador'), hi = nf.data.find(x => x.base === p.base && x.cenario === 'otimista');
+      [elNF, elD].forEach(e => e.classList.remove('dash-skeleton'));
+      elNF.dataset.where = 'chave=' + encodeURIComponent(r.chave); elD.dataset.where = elNF.dataset.where;
+      elNF.textContent = fmt(r.NF); elNF.className = 'sp-kpi-val ' + faixa(r.NF);
+      elD.textContent = (r.delta > 0 ? '+' : r.delta < 0 ? '−' : '') + fmt(Math.abs(r.delta));
+      elD.className = 'sp-kpi-val ' + (r.delta < 0 ? 'sp-bad' : r.delta > 0 ? 'sp-ok' : '');
+      document.getElementById('lab-nf').textContent = 'Projeção 2026 · cenário ' + CEN[p.cenario];
+      document.getElementById('kpi-nf-sub').textContent = 'Faixa: ' + fmt(lo.NF) + ' a ' + fmt(hi.NF);
+    } else if (nf.status === 'error') { elNF.classList.remove('dash-skeleton'); elNF.textContent = '—'; }
+    if (ok(s25)) { el25.classList.remove('dash-skeleton'); el25.textContent = fmt(s25.data.find(r => r.ano === 'AF' && r.comp === 'NF').valor); el25.className = 'sp-kpi-val ' + faixa(Number(s25.data.find(r => r.ano === 'AF' && r.comp === 'NF').valor)); }
+
+    // Boletim por ano
+    const tA = document.querySelector('#tab-anos tbody'), tT = document.querySelector('#tab-turmas tbody'), ch = document.getElementById('chart-ng');
+    if (ok(pr)) {
+      const proj = pr.data.filter(r => r.base === p.base && r.cenario === p.cenario);
+      const of = pr.data.filter(r => r.base === 'oficial');
+      tA.replaceChildren();
+      ['6', '7', '8', '9'].forEach((a, i) => {
+        linha(tA, proj.find(r => r.nivel === 'ano' && r.escopo === a), 'sp-proj' + (i && p.comparar ? ' sp-sep' : ''));
+        if (p.comparar) linha(tA, of.find(r => r.ano === a), 'sp-of');
+      });
+      tT.replaceChildren();
+      proj.filter(r => r.nivel === 'turma').sort((a, b) => a.escopo.localeCompare(b.escopo, 'pt')).forEach(r => linha(tT, r, ''));
+      if (ch.clientWidth > 0) grafico(ch, pr.data, of, p);
+
+      // frase-resumo
+      const tk = document.getElementById('takeaway');
+      if (ok(nf)) {
+        const r = nf.data.find(x => x.base === p.base && x.cenario === p.cenario);
+        const dif = ['6', '7', '8', '9'].map(a => ({ a, d: proj.find(x => x.nivel === 'ano' && x.escopo === a).NG - of.find(x => x.ano === a).NG, n: proj.find(x => x.nivel === 'ano' && x.escopo === a).NG, o: of.find(x => x.ano === a).NG }));
+        const pior = dif.reduce((m, x) => x.d < m.d ? x : m), melhor = dif.reduce((m, x) => x.d > m.d ? x : m);
+        const baixos = proj.filter(x => x.nivel === 'ano').reduce((s, x) => s + ['LP', 'MAT', 'ING', 'GEO', 'HIS', 'CIE'].filter(c => x[c] <= 4).length, 0);
+        tk.classList.remove('dash-skeleton');
+        tk.textContent = `No cenário ${CEN[p.cenario]}, a Nota Final dos Anos Finais fica em ${fmt(r.NF)}, ${r.delta < 0 ? 'abaixo' : r.delta > 0 ? 'acima' : 'no mesmo nível'} ${r.delta === 0 ? 'de' : 'dos'} ${fmt(r.NF2025)} de 2025. ` +
+          (pior.d < 0 ? `O ${pior.a}º ano é o que mais recua (${fmt(pior.o)} → ${fmt(pior.n)})` : 'Nenhum ano recua') +
+          (melhor.d > 0 ? ` e o ${melhor.a}º o que mais avança (${fmt(melhor.o)} → ${fmt(melhor.n)}). ` : '. ') +
+          `${baixos} das 24 notas de componente ficam em baixo desempenho.`;
+      }
+    } else if (pr.status === 'error') { fail(ch); }
+
+    // Lacunas
+    const tL = document.querySelector('#tab-lac tbody');
+    if (ok(lac)) {
+      tL.replaceChildren();
+      lac.data.filter(r => r.base === p.base && r.cenario === p.cenario).sort((a, b) => a.nota - b.nota || a.rotulo.localeCompare(b.rotulo)).forEach(r => {
+        const tr = document.createElement('tr'); tr.dataset.key = r.chave;
+        const cells = [r.rotulo, fmt(r.nota), fmt(r.nota2025), r.pp_medio ? '+' + r.pp_medio + ' p.p.' : '—', r.pp_2025 ? '+' + r.pp_2025 + ' p.p.' : '—'];
+        cells.forEach((t, i) => { const td = document.createElement('td'); td.textContent = t; if (i === 1) td.className = faixa(r.nota); if (i === 2) td.className = faixa(r.nota2025); tr.append(td); });
+        tL.append(tr);
+      });
+    }
+
+    // Método
+    if (ok(cal)) {
+      const c = cal.data.find(x => x.base === p.base), w = 'base=' + p.base;
+      [['k-txt', 'k'], ['kc-txt', 'k_cons'], ['ko-txt', 'k_otim']].forEach(([id, f]) => { const e = document.getElementById(id); e.dataset.where = w; e.textContent = fmt(c[f], 3); });
+    }
+    const tC = document.querySelector('#tab-coortes tbody');
+    if (ok(coo)) {
+      tC.replaceChildren();
+      coo.data.filter(r => r.base === p.base).forEach(r => {
+        const tr = document.createElement('tr'); tr.dataset.key = r.chave;
+        [r.coorte, r.compNome, fmt(r.saresp2025), fmt(r.indice2026) + '%', fmt(r.razao, 2)].forEach(t => { const td = document.createElement('td'); td.textContent = t; tr.append(td); });
+        tC.append(tr);
+      });
+    }
+  });
+})();
+</script>
+</body>
+</html>

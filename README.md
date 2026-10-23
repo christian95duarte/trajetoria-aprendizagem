@@ -32,6 +32,14 @@ O corte dos itens e habilidades é **60% de acerto**; abaixo de 40% o item entra
 
 As cinco provas **não são equivalentes**. A série da Prova Paulista é a única plenamente comparável: mesma origem, mesmo formato, três aplicações. O Simulado tem apenas 5 questões de LP e 5 de Matemática no 6º, 7º e 8º ano (10 e 10 no 9º), então cada acerto desloca o componente em 20 pontos percentuais naqueles anos — leia a direção, não a magnitude. No 6º e no 7º ano o Livro 1 da Diagnóstica é mais acessível que a Prova Paulista, e parte do ganho nesse segmento é efeito do instrumento.
 
+## Projeção SARESP 2026
+
+A pasta `projecao-saresp/` traz uma página à parte, no formato do boletim oficial: Nota Final, Nota Global, participação e as notas de LP, MAT, LI, GEO, HIS e CIE do 6º ao 9º ano, mais a projeção por turma. Publicada em `https://<usuário>.github.io/<repositório>/projecao-saresp/`.
+
+A conversão para a escala do SARESP usa as próprias coortes: o boletim 2025 das turmas que hoje estão no 7º, 8º e 9º comparado com o índice de acerto delas em 2026 (Prova Paulista dos três bimestres, pesos 20%, 30% e 50%). Os cenários conservador e otimista vêm do 1º e do 3º quartis dessa relação. A Nota Global usa peso 1,5 para LP e MAT, que reproduz as Notas Globais de 2025. A página só traz médias por ano e turma, sem nomes de estudantes.
+
+Atenção: no Simulado do 9º ano, os percentuais de CIE, HIS, GEO e LI da tabela de estudantes deste painel estão contados em dobro. A projeção corrige dividindo por dois.
+
 ## Dados pessoais
 
 O painel identifica os estudantes pelo nome, ao lado de notas individuais, nível de proficiência e habilidades a recuperar. A publicação está amparada no termo de autorização de uso de nome e imagem mantido pela escola.
