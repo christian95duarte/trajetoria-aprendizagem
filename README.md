@@ -22,6 +22,8 @@ O painel segue a hierarquia de decisão da escola. Os filtros do topo — segmen
 
 **Ensino Médio · 3ª série.** Camada à parte, que não responde aos filtros dos Anos Finais. Compara o Simulado SARESP da 3ª série (24 questões de LP e 24 de MAT) com o Simulado ENEM de 21/10 (45 questões por área, escala do ENEM): médias e ordem das turmas nas duas provas, dispersão e matriz de níveis por estudante, quem as duas provas apontam como baixo ou divergente, acerto da escola e da rede por área, dificuldade e habilidade, as habilidades mais frágeis de cada prova lado a lado e a tabela de estudantes. Os arquivos foram cruzados pelo nome do estudante.
 
+O Simulado SARESP da 3ª série aparece em nota TRI na escala do ENEM. As questões do SARESP foram calibradas com o modelo de três parâmetros (acerto ao acaso fixo em 0,20), tomando como âncora a proficiência no Simulado ENEM dos mesmos estudantes (80 em Linguagens e 83 em Matemática), e a nota de cada estudante sai por EAP a partir do seu padrão de respostas. Como a âncora é o próprio grupo, a média geral das duas provas fica próxima por construção: a camada compara a posição de turmas e estudantes, não a evolução. As 24 questões de LP do SARESP são do ENEM 2025 (Caderno Verde) e podem ser recalculadas com os parâmetros oficiais do INEP (ITENS_PROVA_2025.csv dos microdados).
+
 ## Componentes
 
 O filtro abre os seis: Língua Portuguesa, Matemática, Ciências, História, Geografia e Língua Inglesa, além da visão conjunta. A leitura padrão é Língua Portuguesa + Matemática.
