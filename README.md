@@ -12,7 +12,7 @@ Para publicar: **Settings → Pages → Deploy from a branch → `main` / `(root
 
 ## As três camadas
 
-O painel segue a hierarquia de decisão da escola. Os filtros do topo — segmento, componente e turma — valem para as três camadas ao mesmo tempo.
+O painel segue a hierarquia de decisão da escola. Nos Anos Finais, os filtros do topo — segmento, componente e turma — valem para as três camadas ao mesmo tempo.
 
 **Camada 1 · Estratégica — direção e gestão.** Proporção de estudantes em Adequado ou Avançado, trilha das cinco medidas, curva do ano, as duas comparações principais, distribuição por nível, panorama dos seis componentes e as turmas que exigem intervenção.
 
@@ -20,7 +20,13 @@ O painel segue a hierarquia de decisão da escola. Os filtros do topo — segmen
 
 **Camada 3 · Operacional — professor e sala de aula.** Mapa de calor questão a questão por turma, itens abaixo de 40% com o distrator mais marcado, grupos de recuperação e a tabela completa de estudantes com busca, filtro por nível e ordenação.
 
-**Ensino Médio · 3ª série.** Camada à parte, que não responde aos filtros dos Anos Finais. Compara o Simulado SARESP da 3ª série (24 questões de LP e 24 de MAT) com o Simulado ENEM de 21/10 (45 questões por área, escala do ENEM): médias e ordem das turmas nas duas provas, dispersão e matriz de níveis por estudante, quem as duas provas apontam como baixo ou divergente, acerto da escola e da rede por área, dificuldade e habilidade, as habilidades mais frágeis de cada prova lado a lado e a tabela de estudantes. Os arquivos foram cruzados pelo nome do estudante.
+## Anos Finais e Ensino Médio
+
+Antes das três camadas, o seletor de etapa separa os **Anos Finais do EF** (6º ao 9º ano, 13 turmas) do **Ensino Médio** (1ª à 3ª série, 10 turmas). Cada etapa tem as suas três camadas e os seus filtros: nos Anos Finais, segmento, componente e turma; no Ensino Médio, série e componente.
+
+**Ensino Médio · Prova Paulista.** Resultados do 1º, 2º e 3º bimestres por turma e componente, das planilhas de exportação da rede (sem dados por estudante). As séries são médias das turmas ponderadas pelos participantes. Camada 1: indicadores, curva do ano, turmas do 1º ao 3º bimestre, panorama dos componentes, participação e turmas que pedem intervenção. Camada 2: cada componente bimestre a bimestre, por série. Camada 3: mapa de turma × componente por bimestre. A 2ª B é a turma do Técnico em Administração; a 3ª série faz só LP, MAT, LI, HIS e FIS na Prova Paulista.
+
+**Ensino Médio · 3ª série.** Compara o Simulado SARESP da 3ª série (24 questões de LP e 24 de MAT) com o Simulado ENEM de 21/10 (45 questões por área, escala do ENEM), distribuído pelas três camadas do EM e visível com o filtro de série em “Todas” ou “3ª série”: médias das turmas nas duas provas (camada 1); escola × rede no ENEM, habilidades, habilidades frágeis lado a lado e o método da nota TRI (camada 2); dispersão e matriz de níveis por estudante, grupos e tabela de estudantes (camada 3). Os arquivos foram cruzados pelo nome do estudante.
 
 O Simulado SARESP da 3ª série aparece em nota TRI na escala do ENEM. As questões do SARESP foram calibradas com o modelo de três parâmetros (acerto ao acaso fixo em 0,20), tomando como âncora a proficiência no Simulado ENEM dos mesmos estudantes (80 em Linguagens e 83 em Matemática), e a nota de cada estudante sai por EAP a partir do seu padrão de respostas. Como a âncora é o próprio grupo, a média geral das duas provas fica próxima por construção: a camada compara a posição de turmas e estudantes, não a evolução. As 24 questões de LP do SARESP são do ENEM 2025 (Caderno Verde) e podem ser recalculadas com os parâmetros oficiais do INEP (ITENS_PROVA_2025.csv dos microdados).
 
