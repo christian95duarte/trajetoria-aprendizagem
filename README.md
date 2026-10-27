@@ -20,6 +20,8 @@ O painel segue a hierarquia de decisão da escola. Os filtros do topo — segmen
 
 **Camada 3 · Operacional — professor e sala de aula.** Mapa de calor questão a questão por turma, itens abaixo de 40% com o distrator mais marcado, grupos de recuperação e a tabela completa de estudantes com busca, filtro por nível e ordenação.
 
+**Ensino Médio · 3ª série.** Camada à parte, que não responde aos filtros dos Anos Finais. Compara o Simulado SARESP da 3ª série (24 questões de LP e 24 de MAT) com o Simulado ENEM de 21/10 (45 questões por área, escala do ENEM): médias e ordem das turmas nas duas provas, dispersão e matriz de níveis por estudante, quem as duas provas apontam como baixo ou divergente, acerto da escola e da rede por área, dificuldade e habilidade, as habilidades mais frágeis de cada prova lado a lado e a tabela de estudantes. Os arquivos foram cruzados pelo nome do estudante.
+
 ## Componentes
 
 O filtro abre os seis: Língua Portuguesa, Matemática, Ciências, História, Geografia e Língua Inglesa, além da visão conjunta. A leitura padrão é Língua Portuguesa + Matemática.
