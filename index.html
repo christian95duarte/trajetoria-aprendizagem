@@ -236,6 +236,12 @@ details .dbody{padding:0 16px 16px;font-size:12.5px;color:var(--ink-2)}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media print{.filters,.layers{display:none}section[hidden]{display:block!important}}
 
+.seletores{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px 28px;margin-top:16px}
+.seletores .etapa{margin-top:0}
+.aval-ctl{display:flex;flex-direction:column;gap:5px}
+.aval-ctl{max-width:100%}
+#f-aval{flex-wrap:wrap;max-width:100%}
+body[data-filtro-aval="ext"] [data-aval="int"],body[data-filtro-aval="int"] [data-aval="ext"]{display:none!important}
 .etapa{display:inline-flex;gap:0;margin-top:16px;border:1px solid var(--hair);border-radius:12px;overflow:hidden;background:var(--sunken)}
 .etapa button{background:none;border:0;padding:9px 18px;cursor:pointer;text-align:left;min-height:44px;color:var(--ink-2)}
 .etapa button+button{border-left:1px solid var(--hair)}
@@ -268,9 +274,17 @@ details .dbody{padding:0 16px 16px;font-size:12.5px;color:var(--ink-2)}
     <span class="fonte">Mapa de Habilidades SARESP 3EM</span>
     <span class="fonte">Matriz de Referência do ENEM</span>
   </div>
+  <div class="seletores">
   <div class="etapa" role="group" aria-label="Etapa de ensino" id="f-etapa">
     <button data-v="af" aria-pressed="true"><b>Anos Finais do EF</b><span>6º ao 9º ano · 13 turmas</span></button>
     <button data-v="em" aria-pressed="false"><b>Ensino Médio</b><span>1ª à 3ª série · 10 turmas</span></button>
+  </div>
+  <div class="aval-ctl"><span class="flabel" id="l-aval">Avaliações</span>
+    <div class="seg" role="group" aria-labelledby="l-aval" id="f-aval">
+      <button data-v="all" aria-pressed="true">Todas</button>
+      <button data-v="ext" aria-pressed="false">Externas · Prova Paulista</button>
+      <button data-v="int" aria-pressed="false">Internas · Diagnóstica e simulados</button>
+    </div></div>
   </div>
   <div class="layers" role="tablist" aria-label="Camadas de decisão">
     <button class="layer-tab" role="tab" data-layer="est" aria-selected="true" aria-controls="v-est" id="t-est">
@@ -343,15 +357,16 @@ details .dbody{padding:0 16px 16px;font-size:12.5px;color:var(--ink-2)}
 
 <!-- ===================== CAMADA 1 · ESTRATÉGICA ===================== -->
 <section id="v-est" role="tabpanel" aria-labelledby="t-est">
+  <div class="callout info aval-aviso" hidden style="margin-bottom:22px"></div>
 
   <div id="aviso-est"></div>
 
-  <div class="block">
+  <div class="block" data-aval="int">
     <div id="hero"></div>
   </div>
 
   <div class="block">
-    <div class="block-head"><h2>As cinco medidas do ano</h2>
+    <div class="block-head"><h2 id="trilha-tit">As cinco medidas do ano</h2>
       <span class="hint">Percentual médio de acerto em Língua Portuguesa e Matemática, na ordem em que as provas foram aplicadas.</span></div>
     <div class="trilha" id="trilha"></div>
     <p class="note" style="margin-top:12px">A variação indicada em cada cartão compara a medida com a imediatamente anterior, sobre os estudantes que fizeram as duas.</p>
@@ -373,7 +388,7 @@ details .dbody{padding:0 16px 16px;font-size:12.5px;color:var(--ink-2)}
     </div>
   </div>
 
-  <div class="block">
+  <div class="block" data-aval="ext">
     <div class="block-head"><h2>Comparação 1 · Prova Paulista nos três bimestres</h2>
       <span class="hint">Mesma prova, mesma rede, três aplicações — a comparação mais confiável do conjunto.</span></div>
     <p class="achado" id="pp-achado"></p>
@@ -388,7 +403,7 @@ details .dbody{padding:0 16px 16px;font-size:12.5px;color:var(--ink-2)}
     </div>
   </div>
 
-  <div class="block">
+  <div class="block" data-aval="int">
     <div class="block-head"><h2>Comparação 2 · Diagnóstica de Entrada e Simulado SARESP</h2>
       <span class="hint">Duas avaliações da própria escola, aplicadas com cerca de dez semanas de intervalo.</span></div>
     <p class="achado" id="sim-achado"></p>
@@ -450,17 +465,18 @@ details .dbody{padding:0 16px 16px;font-size:12.5px;color:var(--ink-2)}
 
 <!-- ===================== CAMADA 2 · TÁTICA ===================== -->
 <section id="v-tat" role="tabpanel" aria-labelledby="t-tat" hidden>
+  <div class="callout info aval-aviso" hidden style="margin-bottom:22px"></div>
 
   <div id="aviso-tat"></div>
 
-  <div class="block">
+  <div class="block" data-aval="int">
     <div class="block-head"><h2>Aprendizagens Essenciais no Simulado SARESP</h2>
       <span class="hint">As 50 questões de LP e Matemática classificadas por AE do Guia do Currículo Priorizado, da mais frágil à mais consolidada.</span></div>
     <div class="grid g4" id="tiles-ae" style="margin-bottom:16px"></div>
     <div class="grid g2" id="aes"></div>
   </div>
 
-  <div class="block">
+  <div class="block" data-aval="int">
     <div class="block-head"><h2>Habilidades BNCC mobilizadas</h2>
       <span class="hint">Códigos associados a cada Aprendizagem Essencial no Guia, com o desempenho do simulado.</span></div>
     <div class="tbl-wrap"><table id="tbl-hab">
@@ -471,20 +487,20 @@ details .dbody{padding:0 16px 16px;font-size:12.5px;color:var(--ink-2)}
     <div class="callout warn" style="margin-top:14px" id="co-retomada"></div>
   </div>
 
-  <div class="block">
+  <div class="block" data-aval="int">
     <div class="block-head"><h2>Aprendizagens Essenciais das demais disciplinas</h2>
       <span class="hint">As 80 questões de Ciências, História, Geografia e Língua Inglesa também foram classificadas por AE.</span></div>
     <div class="subtabs" role="tablist" aria-label="Disciplina" id="st-outras"></div>
     <div class="grid g2" id="aes-outras"></div>
   </div>
 
-  <div class="block">
+  <div class="block" data-aval="int">
     <div class="block-head"><h2>Habilidades na Diagnóstica de Entrada</h2>
       <span class="hint">Ranking do Mapa SARESP 3EM medido pela Diagnóstica, mantido da edição anterior do painel.</span></div>
     <div class="grid g2" id="habs-diag"></div>
   </div>
 
-  <div class="block">
+  <div class="block" data-aval="int">
     <div class="block-head"><h2>Plano de Ensino × Diagnóstica</h2>
       <span class="hint">Cada Aprendizagem Essencial do Plano Semestral com a medida produzida pela Diagnóstica e o encaminhamento.</span></div>
     <div class="tbl-wrap"><table id="tbl-plano">
@@ -516,33 +532,34 @@ details .dbody{padding:0 16px 16px;font-size:12.5px;color:var(--ink-2)}
 
 <!-- ===================== CAMADA 3 · OPERACIONAL ===================== -->
 <section id="v-ope" role="tabpanel" aria-labelledby="t-ope" hidden>
+  <div class="callout info aval-aviso" hidden style="margin-bottom:22px"></div>
 
-  <div class="block">
+  <div class="block" data-aval="int">
     <div class="block-head"><h2>Simulado SARESP, item a item</h2>
       <span class="hint">Percentual de acerto por questão e por turma. O corte de leitura é 60%; abaixo de 40% o item é crítico.</span></div>
     <div id="hm-sim"></div>
   </div>
 
-  <div class="block">
+  <div class="block" data-aval="int">
     <div class="block-head"><h2>Itens do Simulado para retomada imediata</h2>
       <span class="hint">Questões com menos de 40% de acerto, com a alternativa errada mais marcada pela turma.</span></div>
     <div class="grid g2" id="crit-sim"></div>
   </div>
 
-  <div class="block">
+  <div class="block" data-aval="int">
     <div class="block-head"><h2>Demais disciplinas, item a item</h2>
       <span class="hint">Mesmo mapa de calor, para Ciências, História, Geografia e Língua Inglesa.</span></div>
     <details><summary>Abrir o mapa de calor das demais disciplinas</summary>
       <div class="dbody"><div id="hm-outras"></div></div></details>
   </div>
 
-  <div class="block">
+  <div class="block" data-aval="int">
     <div class="block-head"><h2>Diagnóstica de Entrada, item a item</h2>
       <span class="hint">Mapa de calor da Diagnóstica, mantido da edição anterior do painel.</span></div>
     <details><summary>Abrir o mapa de calor da Diagnóstica</summary><div class="dbody"><div id="hm-diag"></div></div></details>
   </div>
 
-  <div class="block">
+  <div class="block" data-aval="int">
     <div class="block-head"><h2>Prioridade de recuperação</h2>
       <span class="hint">Estudantes abaixo do básico no Simulado ou que caíram de nível desde a Diagnóstica.</span></div>
     <div class="grid g4" id="tiles-ope" style="margin-bottom:14px"></div>
@@ -586,11 +603,12 @@ details .dbody{padding:0 16px 16px;font-size:12.5px;color:var(--ink-2)}
 </section>
 <!-- ===================== ENSINO MÉDIO · CAMADA 1 · ESTRATÉGICA ===================== -->
 <section id="v-em-est" role="tabpanel" aria-labelledby="t-est" hidden>
-  <div class="block">
+  <div class="callout info aval-aviso" hidden style="margin-bottom:22px"></div>
+  <div class="block" data-aval="ext">
     <div id="emp-hero"></div>
   </div>
 
-  <div class="block">
+  <div class="block" data-aval="ext">
     <div class="block-head"><h2>A curva do ano · Prova Paulista do Ensino Médio</h2>
       <span class="hint" id="emp-curva-hint"></span></div>
     <div class="card">
@@ -601,7 +619,7 @@ details .dbody{padding:0 16px 16px;font-size:12.5px;color:var(--ink-2)}
     </div>
   </div>
 
-  <div class="block">
+  <div class="block" data-aval="ext">
     <div class="block-head"><h2>Prova Paulista nos três bimestres, turma a turma</h2>
       <span class="hint">Mesma prova, mesma rede, três aplicações. O círculo vazado é o 1º bimestre; o preenchido, o 3º.</span></div>
     <p class="achado" id="emp-turmas-achado"></p>
@@ -616,7 +634,7 @@ details .dbody{padding:0 16px 16px;font-size:12.5px;color:var(--ink-2)}
     </div>
   </div>
 
-  <div class="block">
+  <div class="block" data-aval="ext">
     <div class="block-head"><h2>Panorama dos componentes</h2>
       <span class="hint">Acerto no 3º bimestre por série e componente, com a variação desde o 1º bimestre. A cor é ancorada no corte de 60%.</span></div>
     <p class="achado" id="emp-pan-achado"></p>
@@ -624,7 +642,7 @@ details .dbody{padding:0 16px 16px;font-size:12.5px;color:var(--ink-2)}
       <p class="note" style="margin:10px 0 0">A 3ª série faz só Língua Portuguesa, Matemática, Língua Inglesa, História e Física na Prova Paulista. A 2ª B é a turma do Técnico em Administração.</p></div>
   </div>
 
-  <div class="block">
+  <div class="block" data-aval="ext">
     <div class="block-head"><h2>Participação na Prova Paulista</h2>
       <span class="hint">Percentual de participação informado pela rede, por turma e bimestre.</span></div>
     <div class="card"><div class="tbl-wrap" style="max-height:none"><table id="emp-tbl-part">
@@ -632,18 +650,32 @@ details .dbody{padding:0 16px 16px;font-size:12.5px;color:var(--ink-2)}
       <tbody></tbody></table></div></div>
   </div>
 
-  <div class="block">
+  <div class="block" data-aval="ext">
     <div class="block-head"><h2>Onde a gestão precisa entrar primeiro</h2>
       <span class="hint">Turmas que recuaram do 1º para o 3º bimestre ou que fecharam o 3º bimestre abaixo de 40% em Língua Portuguesa ou Matemática.</span></div>
     <div class="grid g2" id="emp-risco"></div>
   </div>
 
-  <div class="callout info em3-aviso" hidden style="margin-bottom:22px">
+  <div class="callout info em3-aviso" data-aval="int" hidden style="margin-bottom:22px">
     <p style="margin:0">Os simulados SARESP e ENEM, com dados por estudante, foram aplicados só na <b>3ª série</b>. Escolha “Todas” ou “3ª série” no filtro de série para vê-los.</p>
   </div>
-  <div class="em3-only">
+  <div class="em3-only" data-aval="int">
   <div class="block">
     <div id="em-hero"></div>
+  </div>
+  <div class="block">
+    <div class="block-head"><h2>3ª série · Português e Matemática, sala a sala</h2>
+      <span class="hint">Nota média de cada turma no Simulado SARESP e no Simulado ENEM de 21/10, as duas na escala TRI do ENEM. Em cada sala, as duas primeiras barras são Língua Portuguesa e as duas últimas, Matemática; a clara é o SARESP e a escura, o ENEM.</span></div>
+    <p class="achado" id="em-col-achado"></p>
+    <div class="card">
+      <div class="scrollx"><div id="em-colunas"></div></div>
+      <div class="legend" id="em-leg-col"></div>
+      <details style="margin-top:12px"><summary>Ver como tabela</summary>
+        <div class="dbody"><div class="tbl-wrap" style="max-height:none"><table id="em-tbl-col">
+          <thead><tr><th scope="col">Turma</th><th scope="col" class="num">LP · SARESP</th><th scope="col" class="num">LP · ENEM</th>
+            <th scope="col" class="num">MAT · SARESP</th><th scope="col" class="num">MAT · ENEM</th><th scope="col" class="num">Estudantes</th></tr></thead>
+          <tbody></tbody></table></div></div></details>
+    </div>
   </div>
   <div class="block">
     <div class="block-head"><h2>3ª série · As turmas no Simulado SARESP e no Simulado ENEM</h2>
@@ -687,17 +719,18 @@ details .dbody{padding:0 16px 16px;font-size:12.5px;color:var(--ink-2)}
 
 <!-- ===================== ENSINO MÉDIO · CAMADA 2 · TÁTICA ===================== -->
 <section id="v-em-tat" role="tabpanel" aria-labelledby="t-tat" hidden>
-  <div class="block">
+  <div class="callout info aval-aviso" hidden style="margin-bottom:22px"></div>
+  <div class="block" data-aval="ext">
     <div class="block-head"><h2>Componentes bimestre a bimestre</h2>
       <span class="hint">Acerto de cada série em cada componente nos três bimestres da Prova Paulista. A cor é ancorada no corte de 60%: abaixo, em tons quentes; acima, em tons frios.</span></div>
     <p class="achado" id="emp-comp-achado"></p>
     <div class="grid" id="emp-comp" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,470px),1fr))"></div>
   </div>
 
-  <div class="callout info em3-aviso" hidden style="margin-bottom:22px">
+  <div class="callout info em3-aviso" data-aval="int" hidden style="margin-bottom:22px">
     <p style="margin:0">Os simulados SARESP e ENEM, com dados por estudante, foram aplicados só na <b>3ª série</b>. Escolha “Todas” ou “3ª série” no filtro de série para vê-los.</p>
   </div>
-  <div class="em3-only">
+  <div class="em3-only" data-aval="int">
   <div class="block">
     <div class="block-head"><h2>3ª série · Simulado ENEM · escola e rede</h2>
       <span class="hint">Percentual de acerto da 3ª série da escola e da rede em cada questão, nas quatro áreas.</span></div>
@@ -778,7 +811,8 @@ details .dbody{padding:0 16px 16px;font-size:12.5px;color:var(--ink-2)}
 
 <!-- ===================== ENSINO MÉDIO · CAMADA 3 · OPERACIONAL ===================== -->
 <section id="v-em-ope" role="tabpanel" aria-labelledby="t-ope" hidden>
-  <div class="block">
+  <div class="callout info aval-aviso" hidden style="margin-bottom:22px"></div>
+  <div class="block" data-aval="ext">
     <div class="block-head"><h2>Turma a turma, componente a componente</h2>
       <span class="hint">Acerto de cada turma em cada componente da Prova Paulista no bimestre escolhido. Entre parênteses, a variação em relação ao bimestre anterior.</span></div>
     <div class="subtabs" role="tablist" aria-label="Bimestre" id="emp-st-bim">
@@ -789,10 +823,10 @@ details .dbody{padding:0 16px 16px;font-size:12.5px;color:var(--ink-2)}
     <div class="card"><div class="scrollx" tabindex="0"><div id="emp-hm"></div></div></div>
   </div>
 
-  <div class="callout info em3-aviso" hidden style="margin-bottom:22px">
+  <div class="callout info em3-aviso" data-aval="int" hidden style="margin-bottom:22px">
     <p style="margin:0">Os simulados SARESP e ENEM, com dados por estudante, foram aplicados só na <b>3ª série</b>. Escolha “Todas” ou “3ª série” no filtro de série para vê-los.</p>
   </div>
-  <div class="em3-only">
+  <div class="em3-only" data-aval="int">
   <div class="block">
     <div class="block-head"><h2>3ª série · Cada estudante nas duas provas</h2>
       <span class="hint">Só quem fez as duas provas. Os dois eixos estão na escala TRI do ENEM, e os níveis seguem os mesmos cortes nas duas provas.</span></div>
@@ -857,6 +891,9 @@ const COMP_NOME = { LP: "Língua Portuguesa", MAT: "Matemática", CIE: "Ciência
 const OUTRAS = D.compOutras;
 const SEG_NOME = { "67": "6º e 7º anos", "89": "8º e 9º anos" };
 const MED = D.medidas, MID = MED.map(m => m.id);
+const MED_TODAS = MED.slice();
+const EXTERNA = m => m.fonte === "Rede estadual";
+const ativa = id => MED.some(m => m.id === id);
 const MNOME = {}; MED.forEach(m => MNOME[m.id] = m);
 
 /* hidrata os registros colunares e deriva o nivel de cada medida */
@@ -874,7 +911,7 @@ D.alunos = D.alunos.map(linha => {
   return a;
 });
 
-const state = { etapa: "af", layer: "est", seg: "all", comp: "both", turma: "all", outra: "CIE",
+const state = { aval: "all", etapa: "af", layer: "est", seg: "all", comp: "both", turma: "all", outra: "CIE",
                 busca: "", medNivel: "sim", nivel: "all", ord: "turma", parDelta: "oe>sim" };
 
 const $ = s => document.querySelector(s);
@@ -1007,9 +1044,10 @@ function renderHero() {
 
 function renderTrilha() {
   const c = compC();
+  $("#trilha-tit").textContent = state.aval === "ext" ? "As três medidas da Prova Paulista" : state.aval === "int" ? "As duas medidas internas do ano" : "As cinco medidas do ano";
   $("#trilha").innerHTML = MED.map((m, i) => {
     if (!temMedida(m.id, c)) return `<div class="tmed" style="background:var(--sunken)">
-      <div class="tm-ord">${i + 1} DE 5 · ${esc(m.fonte.toUpperCase())}</div>
+      <div class="tm-ord">${i + 1} DE ${MED.length} · ${esc(m.fonte.toUpperCase())}</div>
       <div class="tm-nome" style="color:var(--ink-2)">${esc(m.nome)}</div>
       <div class="tm-val" style="font-size:15px;color:var(--ink-2);margin-top:12px">não avaliado</div>
       <div class="tm-sub" style="color:var(--ink-2)">esta prova cobre apenas LP e Matemática</div></div>`;
@@ -1020,7 +1058,7 @@ function renderTrilha() {
     const dd = ant ? delta(ant, m.id, c) : { d: null, n: 0 };
     const cls = dd.d == null ? "flat" : dd.d > 0.5 ? "up" : dd.d < -0.5 ? "down" : "flat";
     return `<div class="tmed" data-atual="${i === MED.length - 1 ? 1 : 0}">
-      <div class="tm-ord">${i + 1} DE 5 · ${esc(m.fonte.toUpperCase())}</div>
+      <div class="tm-ord">${i + 1} DE ${MED.length} · ${esc(m.fonte.toUpperCase())}</div>
       <div class="tm-nome">${esc(m.nome)}</div>
       <div class="tm-val">${pc(g.pct, 1)}</div>
       <div class="tm-sub">${g.n} estudantes</div>
@@ -1068,13 +1106,16 @@ function renderCurva() {
     `<span><i class="key line" style="background:${COR[c]}"></i>${esc(COMP_NOME[c])}</span>`).join("") +
     `<span style="color:var(--ink-3)">Cada ponto usa todos os estudantes presentes naquela prova.</span>`;
 
-  const lp = ["pp1", "sim"].map(m => aggSel(m, "LP").pct), mt = ["pp1", "sim"].map(m => aggSel(m, "MAT").pct);
+  const ext = [MED[0].id, MED[MED.length - 1].id];
+  const lp = ext.map(m => aggSel(m, "LP").pct), mt = ext.map(m => aggSel(m, "MAT").pct);
   if (lp[0] != null && mt[0] != null) {
     $("#curva-achado").textContent = (mt[1] - mt[0]) > (lp[1] - lp[0])
       ? "Matemática avança mais que Língua Portuguesa ao longo do ano"
       : "Língua Portuguesa avança mais que Matemática ao longo do ano";
   }
-  $("#curva-hint").textContent = `Do 1º bimestre ao Simulado de outubro, no recorte selecionado.`;
+  $("#curva-hint").textContent = state.aval === "ext" ? `Do 1º ao 3º bimestre da Prova Paulista, no recorte selecionado.`
+    : state.aval === "int" ? `Da Diagnóstica de Entrada ao Simulado de outubro, no recorte selecionado.`
+    : `Do 1º bimestre ao Simulado de outubro, no recorte selecionado.`;
 
   tabelaCurva();
 }
@@ -1273,36 +1314,39 @@ function renderStack() {
 
 function renderRisco() {
   const c = compC(), ts = nomesTurmas();
+  const comPP = ativa("pp1") && ativa("pp3"), comInt = ativa("oe") && ativa("sim");
+  const ref = ativa("sim") ? "sim" : "pp3";
+  const refNome = ref === "sim" ? "Simulado" : "3º bimestre da Prova Paulista";
   const linhas = ts.map(t => {
     const oe = A(t, "oe", c).pct, sim = A(t, "sim", c).pct;
     const p1 = A(t, "pp1", c).pct, p3 = A(t, "pp3", c).pct;
-    const dSim = (oe != null && sim != null) ? sim - oe : null;
-    const dPP = (p1 != null && p3 != null) ? p3 - p1 : null;
-    const nc = NC(t, "sim", c), tot = soma(nc);
-    return { t, dSim, dPP, abaixo: nc[0] + nc[1], tot, sim };
+    const dSim = (comInt && oe != null && sim != null) ? sim - oe : null;
+    const dPP = (comPP && p1 != null && p3 != null) ? p3 - p1 : null;
+    const nc = NC(t, ref, c), tot = soma(nc);
+    return { t, dSim, dPP, abaixo: nc[0] + nc[1], tot, v: A(t, ref, c).pct };
   }).map(r => {
     const motivos = [];
     if (r.dSim != null && r.dSim < 0) motivos.push("recuo da Diagnóstica para o Simulado");
     if (r.dPP != null && r.dPP < 0) motivos.push("recuo ao longo da Prova Paulista");
-    if (r.sim != null && r.sim < 60) motivos.push("Simulado abaixo do corte de 60%");
+    if (r.v != null && r.v < 60) motivos.push(`${refNome} abaixo do corte de 60%`);
     if (r.tot && r.abaixo / r.tot >= 0.4) motivos.push("40% ou mais em Básico ou Abaixo do Básico");
     return { ...r, motivos };
   }).filter(r => r.motivos.length)
-    .sort((a, b) => (b.motivos.length - a.motivos.length) || ((a.sim ?? 999) - (b.sim ?? 999)));
+    .sort((a, b) => (b.motivos.length - a.motivos.length) || ((a.v ?? 999) - (b.v ?? 999)));
 
   if (!linhas.length) {
     $("#risco").innerHTML = `<div class="callout info" style="grid-column:1/-1">
       <h3 class="sub">Nenhuma turma em queda neste recorte</h3>
-      <p>Todas as turmas selecionadas avançaram tanto na série da Prova Paulista quanto da Diagnóstica para o Simulado. Use o filtro de segmento ou de componente para examinar recortes específicos.</p></div>`;
+      <p>Todas as turmas selecionadas avançaram nas medidas do filtro atual. Use o filtro de segmento ou de componente para examinar recortes específicos.</p></div>`;
     return;
   }
   $("#risco").innerHTML = linhas.map(r => `<div class="callout">
     <h3 class="sub">${esc(r.t)} · ${esc(r.motivos[0].charAt(0).toUpperCase() + r.motivos[0].slice(1))}</h3>
-    <p>${r.dSim == null ? "Sem par Diagnóstica–Simulado. " : `Da Diagnóstica ao Simulado: ${sgn(r.dSim)} p.p. `}
+    <p>${comInt ? (r.dSim == null ? "Sem par Diagnóstica–Simulado. " : `Da Diagnóstica ao Simulado: ${sgn(r.dSim)} p.p. `) : ""}
        ${r.dPP == null ? "" : `Na Prova Paulista, ${sgn(r.dPP)} p.p. entre o 1º e o 3º bimestre.`}</p>
     <ul>
-      <li><b>${r.abaixo}</b> de ${r.tot} estudantes (${r.tot ? fmt(100 * r.abaixo / r.tot, 0) : "—"}%) terminaram o Simulado em Básico ou Abaixo do Básico.</li>
-      <li>Resultado no Simulado: <b>${pc(r.sim)}</b> de acerto ${pillSit(r.sim)}</li>
+      <li><b>${r.abaixo}</b> de ${r.tot} estudantes (${r.tot ? fmt(100 * r.abaixo / r.tot, 0) : "—"}%) terminaram o ${esc(refNome)} em Básico ou Abaixo do Básico.</li>
+      <li>Resultado no ${esc(refNome)}: <b>${pc(r.v)}</b> de acerto ${pillSit(r.v)}</li>
       ${r.motivos.length > 1 ? `<li>Também pesa: ${esc(r.motivos.slice(1).join("; "))}.</li>` : ""}
     </ul></div>`).join("");
 }
@@ -1428,7 +1472,7 @@ const PARES = [["pp1>pp3", "Prova Paulista 1º → 3º bim"], ["oe>sim", "Diagn�
                ["pp1>pp2", "PP 1º → 2º bim"], ["pp2>pp3", "PP 2º → 3º bim"]];
 function renderDelta() {
   const c0 = compC();
-  const disp = PARES.filter(([k]) => k.split(">").every(m => temMedida(m, c0)));
+  const disp = PARES.filter(([k]) => k.split(">").every(m => temMedida(m, c0) && ativa(m)));
   if (!disp.some(([k]) => k === state.parDelta)) state.parDelta = disp.length ? disp[0][0] : PARES[0][0];
   $("#st-delta").innerHTML = disp.map(([k, l]) =>
     `<button role="tab" data-par="${k}" aria-selected="${state.parDelta === k}">${esc(l)}</button>`).join("");
@@ -1640,18 +1684,21 @@ function renderAlunos() {
   al = al.slice().sort(ord);
 
   $("#alunos-count").textContent = `${al.length} de ${alunosRec().length} estudantes no recorte atual.`;
+  const ms = ["pp1", "pp2", "oe", "pp3", "sim"].filter(ativa), ref = ativa("sim") ? "sim" : "pp3", comSim = ativa("sim");
+  $("#tbl-alunos thead").innerHTML = `<tr><th scope="col">Turma</th><th scope="col">Estudante</th>
+    ${ms.map(m => `<th scope="col" class="num">${esc(MNOME[m].curto)}</th>`).join("")}
+    <th scope="col">Nível ${ref === "sim" ? "no Simulado" : "no PP 3º bim"}</th>${comSim ? `<th scope="col">Itens errados no Simulado</th>` : ""}</tr>`;
   const corpo = al.map(a => {
     const err = [a.simErrLP, a.simErrMAT].filter(Boolean).join(" ");
     return `<tr>
       <td style="white-space:nowrap">${esc(a.turma)}</td>
       <td style="min-width:180px">${esc(a.nome)}</td>
-      ${["pp1", "pp2", "oe", "pp3", "sim"].map(m =>
-        `<td class="num">${a[m + c] == null ? "—" : fmt(a[m + c], 0)}</td>`).join("")}
-      <td>${a.simAusente ? `<span class="pill st-none"><i class="dot"></i>Ausente</span>` : nivPill(a["nsim" + c])}</td>
-      <td class="cod" style="white-space:normal;min-width:130px">${esc(err || "—")}</td></tr>`;
+      ${ms.map(m => `<td class="num">${a[m + c] == null ? "—" : fmt(a[m + c], 0)}</td>`).join("")}
+      <td>${ref === "sim" && a.simAusente ? `<span class="pill st-none"><i class="dot"></i>Ausente</span>` : nivPill(a["n" + ref + c])}</td>
+      ${comSim ? `<td class="cod" style="white-space:normal;min-width:130px">${esc(err || "—")}</td>` : ""}</tr>`;
   }).join("");
   $("#tbl-alunos tbody").innerHTML = corpo ||
-    `<tr><td colspan="9" class="empty">Nenhum estudante encontrado com os filtros atuais.</td></tr>`;
+    `<tr><td colspan="${ms.length + 3 + (comSim ? 1 : 0)}" class="empty">Nenhum estudante encontrado com os filtros atuais.</td></tr>`;
 }
 
 
@@ -1661,8 +1708,8 @@ function renderPanorama() {
   const SERIES = [["pp1", "Prova Paulista 1º bim", "var(--n1)"],
                   ["pp2", "Prova Paulista 2º bim", "var(--n2)"],
                   ["pp3", "Prova Paulista 3º bim", "var(--n3)"],
-                  ["sim", "Simulado SARESP", "var(--n4)"]];
-  const W = 740, L = 124, R = 46, rowH = 66, H = TODOS.length * rowH + 44;
+                  ["sim", "Simulado SARESP", "var(--n4)"]].filter(s => ativa(s[0]));
+  const W = 740, L = 124, R = 46, rowH = Math.max(52, SERIES.length * 14 + 10), H = TODOS.length * rowH + 44;
   const x = v => L + (W - L - R) * v / 100;
   const bh = 12;
   const ticks = [0, 25, 50, 75, 100].map(t =>
@@ -1694,13 +1741,11 @@ function renderPanorama() {
     .sort((p1, p2) => p1.v - p2.v);
   const dpp = TODOS.map(c => ({ c, d: delta("pp1", "pp3", c).d })).filter(o => o.d != null)
     .sort((p1, p2) => p1.d - p2.d);
-  if (sim.length && dpp.length) {
-    $("#pan-achado").textContent =
-      `No Simulado, ${COMP_NOME[sim[0].c]} é o componente mais frágil (${fmt(sim[0].v, 0)}%) e ` +
-      `${COMP_NOME[sim[sim.length - 1].c]} o mais consolidado (${fmt(sim[sim.length - 1].v, 0)}%). ` +
-      `Na Prova Paulista, do 1º ao 3º bimestre, ${COMP_NOME[dpp[dpp.length - 1].c]} é quem mais avança ` +
-      `(${sgn(dpp[dpp.length - 1].d)} p.p.) e ${COMP_NOME[dpp[0].c]} quem menos (${sgn(dpp[0].d)} p.p.).`;
-  }
+  $("#pan-achado").textContent =
+    (ativa("sim") && sim.length ? `No Simulado, ${COMP_NOME[sim[0].c]} é o componente mais frágil (${fmt(sim[0].v, 0)}%) e ` +
+      `${COMP_NOME[sim[sim.length - 1].c]} o mais consolidado (${fmt(sim[sim.length - 1].v, 0)}%). ` : "") +
+    (ativa("pp1") && dpp.length ? `Na Prova Paulista, do 1º ao 3º bimestre, ${COMP_NOME[dpp[dpp.length - 1].c]} é quem mais avança ` +
+      `(${sgn(dpp[dpp.length - 1].d)} p.p.) e ${COMP_NOME[dpp[0].c]} quem menos (${sgn(dpp[0].d)} p.p.).` : "");
 }
 
 /* ---------- Aprendizagens Essenciais das demais disciplinas ---------- */
@@ -1798,7 +1843,7 @@ function render() {
   const rot = state.turma !== "all" ? state.turma : state.seg !== "all" ? SEG_NOME[state.seg] : "escola inteira";
   $("#scope-note").textContent = `recorte: ${rot} · ${rotuloComp()}`;
   avisoEscopo();
-  if (state.etapa === "em") { if (window.renderEMPP) window.renderEMPP(); if (window.renderEM3) window.renderEM3(); return; }
+  if (state.etapa === "em") { if (window.renderEMPP) window.renderEMPP(); if (window.renderEM3) window.renderEM3(); aplicaAval(); return; }
   if (state.layer === "est") { renderHero(); renderTrilha(); renderCurva(); renderPP(); renderSimComp(); renderStack(); renderPanorama(); renderRisco(); }
   if (state.layer === "tat") {
     renderAEs(); renderAEsOutras(); renderHabsDiag(); renderPlano(); renderDelta(); renderMapa();
@@ -1814,7 +1859,28 @@ function render() {
     if (blocos[2]) blocos[2].hidden = !soLPMAT();   // demais disciplinas, já cobertas pelo filtro
     if (blocos[3]) blocos[3].hidden = !soLPMAT();   // Diagnóstica item a item
   }
+  aplicaAval();
   agendaRolagem();
+}
+
+/* filtro de tipo de avaliação: os blocos de um só tipo somem por CSS; aqui só o aviso de cada camada */
+function aplicaAval() {
+  document.body.dataset.filtroAval = state.aval;
+  const sec = $((state.etapa === "em" ? "#v-em-" : "#v-") + state.layer);
+  const av = sec && sec.querySelector(".aval-aviso");
+  if (!av) return;
+  if (state.aval === "all") { av.hidden = true; return; }
+  const fora = [...sec.querySelectorAll("[data-aval]")].filter(e => e.dataset.aval !== state.aval && !e.hidden)
+    .reduce((n, e) => n + (e.classList.contains("block") ? 1 : e.querySelectorAll(".block").length), 0);
+  const visiveis = [...sec.querySelectorAll(".block")].filter(b => b.offsetParent !== null).length;
+  const rot = state.aval === "ext" ? "avaliações externas (Prova Paulista)" : "avaliações internas (Diagnóstica e simulados)";
+  const motivo = (state.aval === "ext" ? "das avaliações internas" : "da Prova Paulista");
+  av.hidden = !fora && visiveis > 0;
+  av.innerHTML = `<p style="margin:0">Filtro em <b>${esc(rot)}</b>. ` +
+    (fora ? `${fora} ${fora > 1 ? "seções desta camada estão ocultas porque dependem " + motivo : "seção desta camada está oculta porque depende " + motivo}. ` : "") +
+    (visiveis ? "" : state.aval === "int" && state.etapa === "em"
+      ? "No Ensino Médio, as avaliações internas com dados são o Simulado SARESP e o Simulado ENEM da 3ª série."
+      : "Não há análises deste tipo nesta camada.") + `</p>`;
 }
 
 /* O estado de rolagem so se estabiliza depois que as fontes carregam e quando um
@@ -1846,6 +1912,15 @@ function trocarCamada(l) {
   render();
 }
 document.querySelectorAll(".layer-tab").forEach(b => b.addEventListener("click", () => trocarCamada(b.dataset.layer)));
+$("#f-aval").addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b || b.dataset.v === state.aval) return;
+  state.aval = b.dataset.v;
+  $("#f-aval").querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+  MED.splice(0, MED.length, ...MED_TODAS.filter(m => state.aval === "all" || (state.aval === "ext") === EXTERNA(m)));
+  if (!ativa(state.medNivel)) state.medNivel = ativa("sim") ? "sim" : MED[MED.length - 1].id;
+  $("#f-medida").innerHTML = MED.map(m => `<option value="${m.id}"${m.id === state.medNivel ? " selected" : ""}>${esc(m.nome)}</option>`).join("");
+  render();
+});
 $("#f-etapa").addEventListener("click", e => {
   const b = e.target.closest("button"); if (!b || b.dataset.v === state.etapa) return;
   state.etapa = b.dataset.v;
@@ -2106,6 +2181,7 @@ render();
     document.querySelectorAll(".em3-only").forEach(el => el.hidden = !ver3);
     document.querySelectorAll(".em3-aviso").forEach(el => el.hidden = ver3);
     hero(); curva(); turmas(); panorama(); participacao(); risco(); componentes(); mapa();
+    if (typeof aplicaAval === "function") aplicaAval();
   };
 })();
 </script>
@@ -2221,6 +2297,51 @@ render();
       <td class="num">${fmt0(r.ch)}</td><td class="num">${r.nCN < 5 ? `<span title="Só ${r.nCN} estudantes fizeram a prova">${fmt0(r.cn)}*</span>` : fmt0(r.cn)}</td>
       <td class="num">${r.n2}</td></tr>`).join("") +
       `<tr><td colspan="10" class="note" style="color:var(--ink-3)">Entre parênteses, a nota de 0 a 10 do SARESP. * A 3ª D não fez a prova de Ciências da Natureza; o valor vem de poucos estudantes.</td></tr>`;
+  }
+
+  /* ---------- colunas agrupadas: LP e MAT, SARESP × ENEM, por sala ---------- */
+  function colunas() {
+    const geral = { t: "3ª série", lpTri: media(AL.map(a => a.lpTri)), lc: media(AL.map(a => a.lc)), matTri: media(AL.map(a => a.matTri)), mt: media(AL.map(a => a.mt)) };
+    const rows = [...porTurma(), geral];
+    const S = [{ k: "lpTri", nome: "Língua Portuguesa · SARESP", cor: "color-mix(in srgb, var(--lp) 42%, var(--surface))" },
+               { k: "lc", nome: "Língua Portuguesa · ENEM", cor: "var(--lp)" },
+               { k: "matTri", nome: "Matemática · SARESP", cor: "color-mix(in srgb, var(--mat) 42%, var(--surface))" },
+               { k: "mt", nome: "Matemática · ENEM", cor: "var(--mat)" }];
+    const W = 1100, L = 44, R = 10, T = 22, B = 46, H = 340;
+    const max = Math.ceil(Math.max(...rows.flatMap(r => S.map(s => r[s.k] || 0))) / 100) * 100;
+    const gw = (W - L - R) / rows.length, bw = Math.min(30, (gw - 26) / 4.6), gap = bw * .2;
+    const y = v => T + (H - T - B) * (1 - v / max);
+    const grade = [];
+    for (let v = 0; v <= max; v += 100) grade.push(`<line class="${v ? "gridline" : "axisline"}" x1="${L}" y1="${y(v)}" x2="${W - R}" y2="${y(v)}" ${v ? "" : 'stroke="var(--axis)"'}></line>
+      <text class="chart-t" x="${L - 6}" y="${y(v) + 4}" text-anchor="end">${v}</text>`);
+    const grupos = rows.map((r, i) => {
+      const x0 = L + gw * i + (gw - (4 * bw + 3 * gap + gap * 1.5)) / 2;
+      const barras = S.map((s, k) => {
+        const v = r[s.k]; if (v == null) return "";
+        const x = x0 + k * (bw + gap) + (k >= 2 ? gap * 1.5 : 0);
+        return `<g><title>${esc(r.t)} · ${esc(s.nome)}: ${fmt0(v)}</title>
+          <rect x="${x.toFixed(1)}" y="${y(v).toFixed(1)}" width="${bw.toFixed(1)}" height="${(y(0) - y(v)).toFixed(1)}" rx="3" style="fill:${s.cor}"></rect>
+          <text class="chart-t" x="${(x + bw / 2).toFixed(1)}" y="${(y(v) - 5).toFixed(1)}" text-anchor="middle" style="font-size:10.5px;fill:var(--ink-2)">${fmt0(v)}</text></g>`;
+      }).join("");
+      const ultimo = i === rows.length - 1;
+      return `${ultimo ? `<line x1="${L + gw * i}" y1="${T}" x2="${L + gw * i}" y2="${y(0)}" stroke="var(--axis)" stroke-dasharray="3 3"></line>` : ""}
+        ${barras}<text class="chart-l" x="${L + gw * i + gw / 2}" y="${H - B + 20}" text-anchor="middle" style="${ultimo ? "font-weight:700" : ""}">${esc(r.t)}</text>`;
+    }).join("");
+    $("#em-colunas").innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="${W}" style="max-width:100%;min-width:560px" role="img"
+      aria-label="Nota TRI média por turma em Língua Portuguesa e Matemática no Simulado SARESP e no Simulado ENEM">${grade.join("")}${grupos}
+      <text class="chart-t" x="${L}" y="12">nota TRI (escala do ENEM)</text></svg>`;
+    $("#em-leg-col").innerHTML = S.map(s => `<span><i class="key" style="background:${s.cor}"></i>${esc(s.nome)}</span>`).join("");
+    const ts = rows.slice(0, -1), top = k => ts.slice().sort((a, b) => b[k] - a[k])[0], bot = k => ts.slice().sort((a, b) => a[k] - b[k])[0];
+    const frase = (nome, ks, ke) => top(ks).t === top(ke).t
+      ? `em ${nome}, a ${top(ks).t} tem a maior nota nas duas provas (${fmt0(top(ks)[ks])} no SARESP e ${fmt0(top(ke)[ke])} no ENEM)`
+      : `em ${nome}, a ${top(ks).t} lidera no SARESP (${fmt0(top(ks)[ks])}) e a ${top(ke).t} no ENEM (${fmt0(top(ke)[ke])})`;
+    const baixa = (nome, ks, ke) => bot(ks).t === bot(ke).t ? `a ${bot(ks).t} tem a menor nota de ${nome} nas duas` : null;
+    const fr = [frase("Língua Portuguesa", "lpTri", "lc"), frase("Matemática", "matTri", "mt")];
+    const bx = [baixa("Língua Portuguesa", "lpTri", "lc"), baixa("Matemática", "matTri", "mt")].filter(Boolean);
+    $("#em-col-achado").textContent = fr.join("; ").replace(/^./, c => c.toUpperCase()) + "." + (bx.length ? " " + bx.join(" e ").replace(/^./, c => c.toUpperCase()) + "." : "");
+    $("#em-tbl-col tbody").innerHTML = rows.map((r, i) => `<tr${i === rows.length - 1 ? ' style="font-weight:600"' : ""}><th scope="row">${esc(r.t)}</th>
+      <td class="num">${fmt0(r.lpTri)}</td><td class="num">${fmt0(r.lc)}</td><td class="num">${fmt0(r.matTri)}</td><td class="num">${fmt0(r.mt)}</td>
+      <td class="num">${i === rows.length - 1 ? AL.filter(a => a.temS || a.temE).length : AL.filter(a => a.turma === r.t && (a.temS || a.temE)).length}</td></tr>`).join("");
   }
 
   /* ---------- estudantes: dispersão e matriz ---------- */
@@ -2397,7 +2518,7 @@ render();
   $("#em-cruz").textContent = `Os dois arquivos foram cruzados pelo nome do estudante: ${dois} aparecem nos dois, ${soS} só no Simulado SARESP e ${soE} só no Simulado ENEM (inclui ausentes). Os ausentes do SARESP não constam do relatório recebido.`;
 
   let feito = false;
-  window.renderEM3 = () => { if (feito) return; feito = true; hero(); turmas(); alunos(); grupos(); rede(); habs(); frageis(); parametros(); tabela(); };
+  window.renderEM3 = () => { if (feito) return; feito = true; hero(); colunas(); turmas(); alunos(); grupos(); rede(); habs(); frageis(); parametros(); tabela(); };
 })();
 </script>
 </body>
